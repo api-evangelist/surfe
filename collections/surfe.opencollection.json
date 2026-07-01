@@ -1,0 +1,202 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Surfe API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "People",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search people.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.surfe.com/v2/people/search",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"limit\": 10,\n  \"people\": {\n    \"jobTitles\": [\"Head of Sales\"],\n    \"seniorities\": [\"Director\"]\n  },\n  \"companies\": {\n    \"industries\": [\"Software\"],\n    \"countries\": [\"US\"]\n  }\n}"
+            }
+          },
+          "docs": "Search for people by persona and company filters. Job titles are expanded automatically with acronym and semantic matching."
+        },
+        {
+          "info": {
+            "name": "Enrich people (start).",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.surfe.com/v2/people/enrich",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"people\": [\n    {\n      \"linkedinUrl\": \"https://www.linkedin.com/in/example\"\n    }\n  ],\n  \"include\": {\n    \"email\": true,\n    \"mobile\": true,\n    \"linkedInUrl\": true,\n    \"jobHistory\": false\n  },\n  \"enrichmentOptions\": {\n    \"acceptedEmailType\": \"professional\",\n    \"skipMobileEnrichmentIfNoEmailFound\": true\n  }\n}"
+            }
+          },
+          "docs": "Start an asynchronous bulk enrichment job for up to 10,000 people. Returns an enrichmentID for polling or webhook callback."
+        },
+        {
+          "info": {
+            "name": "Enrich people (get).",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.surfe.com/v2/people/enrich/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The enrichment job ID returned by the start operation."
+              }
+            ]
+          },
+          "docs": "Retrieve the status and results of a people enrichment job by ID."
+        },
+        {
+          "info": {
+            "name": "Find people by email.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.surfe.com/v2/people/find-by-email",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"emails\": [\"jane.doe@example.com\"]\n}"
+            }
+          },
+          "docs": "Enrich people directly from a list of email addresses."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Companies",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search companies.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.surfe.com/v2/companies/search",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"limit\": 25,\n  \"filters\": {\n    \"industries\": [\"Software\"],\n    \"employeeCount\": {\n      \"from\": 50,\n      \"to\": 500\n    },\n    \"countries\": [\"US\"]\n  }\n}"
+            }
+          },
+          "docs": "Search for companies against Ideal Customer Profile filters. Deducts ceil(results / 25) ICP search credits when credit charging is enabled."
+        },
+        {
+          "info": {
+            "name": "Enrich companies (start).",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.surfe.com/v2/companies/enrich",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"companies\": [\n    {\n      \"domain\": \"example.com\"\n    }\n  ]\n}"
+            }
+          },
+          "docs": "Start an asynchronous bulk enrichment job for companies identified by domain."
+        },
+        {
+          "info": {
+            "name": "Enrich companies (get).",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.surfe.com/v2/companies/enrich/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The enrichment job ID returned by the start operation."
+              }
+            ]
+          },
+          "docs": "Retrieve the status and results of a company enrichment job by ID."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Recommendations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create or update ICP.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.surfe.com/v2/recommendations/icp",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"Mid-market SaaS\",\n  \"filters\": {\n    \"industries\": [\"Software\"],\n    \"employeeCount\": {\n      \"from\": 50,\n      \"to\": 1000\n    }\n  }\n}"
+            }
+          },
+          "docs": "Create or update the Ideal Customer Profile used to generate lookalike account recommendations."
+        },
+        {
+          "info": {
+            "name": "Fetch lookalike recommendations.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.surfe.com/v2/recommendations/fetch",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"limit\": 25\n}"
+            }
+          },
+          "docs": "Fetch lookalike account recommendations resembling the best-fit companies defined by the ICP."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get credit balance.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.surfe.com/v2/credits"
+          },
+          "docs": "Return the remaining credit balance across the email, mobile, and search/ICP credit pools."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

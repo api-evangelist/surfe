@@ -1,0 +1,190 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Surfe
+providerId: surfe
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- B2B Data
+- Contact Data
+- Enrichment
+- Credits
+- Plans
+description: >-
+  Surfe uses a seat-based subscription model with monthly-refilling credit
+  pools. Credits are consumed separately for email finder lookups, mobile phone
+  finder lookups, and company/people (ICP) searches. Higher tiers raise the
+  monthly credit allotments and unlock features such as Account Lookalikes and
+  the Prospect List Builder. Yearly billing offers up to 25% savings versus
+  monthly. Credit consumption applies to API usage the same way it applies to
+  the LinkedIn and CRM experiences.
+notes: >-
+  Prices and credit allotments below reflect the published Surfe pricing page and
+  are subject to change; verify current per-seat prices, credit counts, and API
+  plan availability during reconciliation. API access, webhooks, and n8n
+  integration are referenced on higher tiers.
+sources:
+- https://www.surfe.com/pricing/
+- https://developers.surfe.com/
+- https://intercom.help/surfe/en/articles/14324073-api-getting-started-with-the-surfe-api
+plans:
+- id: surfe-free
+  name: Free
+  type: free
+  description: >-
+    Entry tier with a small annual allotment of email and mobile finder credits,
+    unlimited email validation, and limited CRM add.
+  entries:
+  - label: Email Finder Credits
+    name: email_credits
+    type: request
+    metric: credits
+    limit: 20
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: true
+  - label: Mobile Phone Finder Credits
+    name: mobile_credits
+    type: request
+    metric: credits
+    limit: 5
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: true
+  - label: Search Results
+    name: search_results
+    type: request
+    metric: results
+    limit: 1000
+    timeFrame: week
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: false
+  elements:
+  - name: Email Validation (unlimited)
+  - name: CRM Add (limited)
+- id: surfe-essential
+  name: Essential
+  type: paid
+  description: >-
+    Per-seat plan at $39/user/month with larger annual email/mobile credit
+    allotments, full CRM and Google Sheets integration, and list sync.
+  entries:
+  - label: Seat
+    name: seat
+    type: flat
+    metric: seat
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $39/user/month
+    userMultiplied: true
+  - label: Email Finder Credits
+    name: email_credits
+    type: request
+    metric: credits
+    limit: 150
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: true
+  - label: Mobile Phone Finder Credits
+    name: mobile_credits
+    type: request
+    metric: credits
+    limit: 50
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: true
+  elements:
+  - name: CRM and Google Sheets Integration
+  - name: List Sync
+  - name: Email Validation (unlimited)
+- id: surfe-pro
+  name: Pro
+  type: paid
+  description: >-
+    Most popular per-seat plan at $79/user/month with the largest standard
+    email credit allotment, higher daily search results, Account Lookalikes,
+    and the Prospect List Builder.
+  entries:
+  - label: Seat
+    name: seat
+    type: flat
+    metric: seat
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $79/user/month
+    userMultiplied: true
+  - label: Email Finder Credits
+    name: email_credits
+    type: request
+    metric: credits
+    limit: 1000
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: true
+  - label: Mobile Phone Finder Credits
+    name: mobile_credits
+    type: request
+    metric: credits
+    limit: 100
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: true
+  - label: Search Results
+    name: search_results
+    type: request
+    metric: results
+    limit: 10000
+    timeFrame: day
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: false
+  elements:
+  - name: Account Lookalikes
+  - name: Prospect List Builder
+  - name: API Access
+  - name: Webhooks
+- id: surfe-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Custom volume commitments, expanded credit pools, API access with higher
+    quotas, and negotiated terms. Contact Surfe sales.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Custom Credit Volumes
+  - name: API Access
+  - name: Priority Support
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,68 @@
+aid: surfe
+name: Surfe
+review:
+  question: Does Surfe expose a documented public WebSocket or streaming API?
+  answer: false
+  date: '2026-07-01'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No streaming transport (WebSocket, SSE, or otherwise) is documented for the
+    Surfe API. Asynchronous work (bulk people and company enrichment) is handled
+    with a request/response job pattern - POST to start, GET to poll - plus
+    optional HTTP webhook callbacks. Webhooks are outbound HTTP POSTs from Surfe
+    to a subscriber URL, not a persistent streaming connection, so no AsyncAPI
+    document was authored under current scope.
+findings:
+  summary: |
+    Surfe (formerly Leadjet) publishes a REST-only HTTP API under
+    https://api.surfe.com/v2, authenticated with a Bearer API key. Bulk
+    enrichment is asynchronous but implemented as a job pattern: POST
+    /people/enrich or /companies/enrich returns an enrichmentID, and the caller
+    either polls GET /people/enrich/{id} (or /companies/enrich/{id}) or registers
+    a webhook via notificationOptions.webhookUrl to be notified on completion.
+    No WebSocket (ws:// or wss://) or Server-Sent Events surface is documented.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.surfe.com/v2
+      documented: true
+    - protocol: Webhook
+      scheme: https
+      note: Outbound HTTP POST callback on enrichment job completion; not a persistent stream.
+      documented: true
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in the Surfe API reference.
+  endpointsConfirmedRest:
+    - POST https://api.surfe.com/v2/people/search
+    - POST https://api.surfe.com/v2/people/enrich
+    - GET  https://api.surfe.com/v2/people/enrich/{id}
+    - POST https://api.surfe.com/v2/people/find-by-email
+    - POST https://api.surfe.com/v2/companies/search
+    - POST https://api.surfe.com/v2/companies/enrich
+    - GET  https://api.surfe.com/v2/companies/enrich/{id}
+    - POST https://api.surfe.com/v2/recommendations/icp
+    - POST https://api.surfe.com/v2/recommendations/fetch
+    - GET  https://api.surfe.com/v2/credits
+sources:
+  - url: https://developers.surfe.com/
+    type: APIReference
+    note: API reference lists REST base URL https://api.surfe.com/v2; no WebSocket mentioned.
+  - url: https://developers.surfe.com/public-015-create-people-bulk-enrichment
+    type: Documentation
+    note: Bulk people enrichment start endpoint; async job returns enrichmentID for polling or webhook.
+  - url: https://developers.surfe.com/webhooks
+    type: Documentation
+    note: Webhooks are outbound HTTP callbacks, not a streaming/WebSocket transport.
+  - url: https://intercom.help/surfe/en/articles/14324073-api-getting-started-with-the-surfe-api
+    type: Documentation
+    note: Getting-started guide confirms Bearer API key auth and REST usage.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No streaming protocol surface exists. Asynchronous enrichment is a REST job
+    pattern with optional webhook callbacks, both already modeled in the OpenAPI
+    definition, so no AsyncAPI document was created.

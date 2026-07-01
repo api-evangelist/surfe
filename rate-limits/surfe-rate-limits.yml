@@ -1,0 +1,71 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Surfe
+providerId: surfe
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- B2B Data
+- Contact Data
+- Enrichment
+- Rate Limiting
+- Quotas
+- Throttling
+description: >-
+  The Surfe API enforces a per-account request rate limit of up to 10 requests
+  per second, allowing short bursts of up to 20 requests, plus a daily request
+  quota (documented at 2,000 requests/day) that resets at midnight in the user's
+  timezone. Separate from request throttling, enrichment and search consume
+  credits from distinct email, mobile, and search/ICP pools; exhausting a credit
+  pool returns HTTP 402 rather than a throttling response.
+notes: >-
+  Values reflect the published Surfe API documentation and are subject to change;
+  verify current per-second, burst, and daily request limits during
+  reconciliation. Large bulk enrichment jobs (up to 10,000 people per request)
+  are processed asynchronously and should be consumed via webhook or polling
+  rather than tight retry loops.
+sources:
+- https://developers.surfe.com/
+- https://intercom.help/surfe/en/articles/14324073-api-getting-started-with-the-surfe-api
+responseCodes:
+  throttled: 429
+  insufficientCredits: 402
+limits:
+- name: Requests Per Second
+  scope: account
+  metric: requests
+  limit: 10
+  notes: Sustained rate limit across the account's API key.
+- name: Burst
+  scope: account
+  metric: requests
+  limit: 20
+  notes: Short bursts up to 20 requests are tolerated above the 10 rps sustained rate.
+- name: Requests Per Day
+  scope: account
+  metric: requests
+  limit: 2000
+  notes: Daily request quota; resets at midnight in the user's timezone. Verify on reconciliation.
+- name: Bulk Enrichment Batch Size
+  scope: request
+  metric: records
+  limit: 10000
+  notes: Maximum people per POST /people/enrich request; processed asynchronously.
+policies:
+- name: Credit Pools
+  description: >-
+    Email, mobile, and search/ICP credits are metered in separate pools;
+    running out returns HTTP 402 independent of request throttling.
+- name: Backoff Strategy
+  description: >-
+    Clients should implement exponential backoff with jitter on 429 responses
+    and honor any Retry-After header.
+- name: Async Consumption
+  description: >-
+    Prefer webhooks (notificationOptions.webhookUrl) over polling for bulk
+    enrichment jobs to avoid burning request quota on status checks.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

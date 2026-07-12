@@ -1,0 +1,14 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/surfe-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: 'Surfe API key issued from the Surfe dashboard, sent as `Authorization: Bearer
+    {api-key}`.'
+  sources:
+  - openapi/surfe-openapi.yml

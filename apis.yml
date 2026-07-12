@@ -143,3 +143,10 @@ common:
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+common:
+  - type: DomainSecurity
+    url: security/surfe-domain-security.yml
+  - type: Authentication
+    url: authentication/surfe-authentication.yml
+  - url: https://www.surfe.com/blog/feed/
+    type: Blog

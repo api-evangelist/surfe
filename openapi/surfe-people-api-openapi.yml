@@ -1,0 +1,428 @@
+openapi: 3.0.3
+info:
+  title: Surfe Account People API
+  version: '2.0'
+  description: 'The Surfe API (formerly Leadjet) provides B2B people and company search plus enrichment. It returns verified professional emails and mobile phone numbers, company firmographics, and lookalike account recommendations. Bulk enrichment is asynchronous: start a job with POST and either poll the GET job endpoint or receive a webhook callback. All requests are authenticated with a Bearer API key managed from the Surfe dashboard.'
+  contact:
+    name: Surfe API Support
+    url: https://developers.surfe.com/
+  x-former-name: Leadjet
+servers:
+- url: https://api.surfe.com/v2
+  description: Surfe API v2 production base URL
+security:
+- bearerAuth: []
+tags:
+- name: People
+  description: Search and enrich individual contacts.
+paths:
+  /people/search:
+    post:
+      tags:
+      - People
+      summary: Search people
+      description: Search for people by persona filters (job titles, seniorities, departments) and company filters (industry, headcount, location). Job titles are expanded automatically with acronym and semantic matching. Results are paged with nextPageToken.
+      operationId: searchPeople
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PeopleSearchRequest'
+      responses:
+        '200':
+          description: Matching people.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeopleSearchResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCredits'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /people/enrich:
+    post:
+      tags:
+      - People
+      summary: Enrich people (start)
+      description: Start an asynchronous bulk enrichment job for up to 10,000 people. Each person is identified by a LinkedIn URL, or by first name + last name + company name or domain. Returns an enrichment ID for polling or a webhook callback.
+      operationId: startPeopleEnrichment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PeopleEnrichmentRequest'
+      responses:
+        '202':
+          description: Enrichment job accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrichmentJobAccepted'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCredits'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /people/enrich/{id}:
+    get:
+      tags:
+      - People
+      summary: Enrich people (get)
+      description: Retrieve the status and results of a people enrichment job by ID. Poll until status is COMPLETED, or use a webhook to be notified.
+      operationId: getPeopleEnrichment
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The enrichment job ID returned by the start operation.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Enrichment job status and enriched people.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeopleEnrichmentResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /people/find-by-email:
+    post:
+      tags:
+      - People
+      summary: Find people by email
+      description: Enrich people directly from a list of email addresses, returning the matched person profile and firmographics where available.
+      operationId: findPeopleByEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - emails
+              properties:
+                emails:
+                  type: array
+                  items:
+                    type: string
+                    format: email
+                  description: Email addresses to enrich.
+      responses:
+        '200':
+          description: Matched people.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  people:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EnrichedPerson'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  schemas:
+    PeopleFilters:
+      type: object
+      description: Person-based filters.
+      properties:
+        jobTitles:
+          type: array
+          items:
+            type: string
+          description: Job titles to match. Titles are expanded automatically with bidirectional acronym and semantic matching.
+        seniorities:
+          type: array
+          items:
+            type: string
+        departments:
+          type: array
+          items:
+            type: string
+        countries:
+          type: array
+          items:
+            type: string
+    PeopleSearchResponse:
+      type: object
+      properties:
+        people:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+        total:
+          type: integer
+        nextPageToken:
+          type: string
+    EmailRecord:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        type:
+          type: string
+          enum:
+          - professional
+          - personal
+        validationStatus:
+          type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+    CompanyFilters:
+      type: object
+      description: Company-based filters.
+      properties:
+        industries:
+          type: array
+          items:
+            type: string
+        employeeCount:
+          $ref: '#/components/schemas/Range'
+        revenue:
+          $ref: '#/components/schemas/Range'
+        countries:
+          type: array
+          items:
+            type: string
+        domains:
+          type: array
+          items:
+            type: string
+        keywords:
+          type: array
+          items:
+            type: string
+    Range:
+      type: object
+      properties:
+        from:
+          type: integer
+        to:
+          type: integer
+    EnrichedPerson:
+      allOf:
+      - $ref: '#/components/schemas/Person'
+      - type: object
+        properties:
+          emails:
+            type: array
+            items:
+              $ref: '#/components/schemas/EmailRecord'
+          mobilePhones:
+            type: array
+            items:
+              $ref: '#/components/schemas/PhoneRecord'
+          jobHistory:
+            type: array
+            items:
+              $ref: '#/components/schemas/JobHistoryEntry'
+          status:
+            type: string
+    PeopleSearchRequest:
+      type: object
+      required:
+      - limit
+      properties:
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+          description: Maximum results per page.
+        people:
+          $ref: '#/components/schemas/PeopleFilters'
+        companies:
+          $ref: '#/components/schemas/CompanyFilters'
+        peoplePerCompany:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Maximum results returned per company.
+        pageToken:
+          type: string
+          description: Pagination token from a previous response.
+    PeopleEnrichmentResult:
+      type: object
+      properties:
+        enrichmentID:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/JobStatus'
+        percentCompleted:
+          type: integer
+        people:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnrichedPerson'
+    Person:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        jobTitle:
+          type: string
+        seniorities:
+          type: array
+          items:
+            type: string
+        departments:
+          type: array
+          items:
+            type: string
+        companyName:
+          type: string
+        companyDomain:
+          type: string
+        country:
+          type: string
+        linkedInUrl:
+          type: string
+        externalID:
+          type: string
+    PhoneRecord:
+      type: object
+      properties:
+        mobilePhone:
+          type: string
+        confidenceScore:
+          type: number
+    PeopleEnrichmentRequest:
+      type: object
+      required:
+      - people
+      - include
+      properties:
+        people:
+          type: array
+          minItems: 1
+          maxItems: 10000
+          description: People to enrich. Each entry needs at least a linkedinUrl, or firstName + lastName + companyName or companyDomain.
+          items:
+            $ref: '#/components/schemas/PersonInput'
+        include:
+          type: object
+          description: Which fields to retrieve.
+          properties:
+            email:
+              type: boolean
+            mobile:
+              type: boolean
+            linkedInUrl:
+              type: boolean
+            jobHistory:
+              type: boolean
+        enrichmentOptions:
+          type: object
+          properties:
+            acceptedEmailType:
+              type: string
+              enum:
+              - professional
+              - personal
+            skipMobileEnrichmentIfNoEmailFound:
+              type: boolean
+        notificationOptions:
+          type: object
+          properties:
+            webhookUrl:
+              type: string
+              format: uri
+    EnrichmentJobAccepted:
+      type: object
+      properties:
+        enrichmentID:
+          type: string
+          format: uuid
+        enrichmentCallbackURL:
+          type: string
+          format: uri
+        message:
+          type: string
+          description: Estimated completion time.
+    JobHistoryEntry:
+      type: object
+      properties:
+        companyName:
+          type: string
+        companyDomain:
+          type: string
+        jobTitle:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+    JobStatus:
+      type: string
+      enum:
+      - PENDING
+      - IN_PROGRESS
+      - COMPLETED
+      - FAILED
+    PersonInput:
+      type: object
+      properties:
+        linkedinUrl:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        companyName:
+          type: string
+        companyDomain:
+          type: string
+        externalID:
+          type: string
+  responses:
+    InsufficientCredits:
+      description: Not enough credits to complete the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource or job not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Surfe API key issued from the Surfe dashboard, sent as `Authorization: Bearer {api-key}`.'

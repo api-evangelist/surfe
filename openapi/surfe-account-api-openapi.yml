@@ -1,0 +1,64 @@
+openapi: 3.0.3
+info:
+  title: Surfe Account API
+  version: '2.0'
+  description: 'The Surfe API (formerly Leadjet) provides B2B people and company search plus enrichment. It returns verified professional emails and mobile phone numbers, company firmographics, and lookalike account recommendations. Bulk enrichment is asynchronous: start a job with POST and either poll the GET job endpoint or receive a webhook callback. All requests are authenticated with a Bearer API key managed from the Surfe dashboard.'
+  contact:
+    name: Surfe API Support
+    url: https://developers.surfe.com/
+  x-former-name: Leadjet
+servers:
+- url: https://api.surfe.com/v2
+  description: Surfe API v2 production base URL
+security:
+- bearerAuth: []
+tags:
+- name: Account
+  description: Credit balance and account utilities.
+paths:
+  /credits:
+    get:
+      tags:
+      - Account
+      summary: Get credit balance
+      description: Return the remaining credit balance across the email, mobile, and search/ICP credit pools.
+      operationId: getCredits
+      responses:
+        '200':
+          description: Current credit balances.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditBalance'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+    CreditBalance:
+      type: object
+      properties:
+        emailCredits:
+          type: integer
+        mobileCredits:
+          type: integer
+        searchCredits:
+          type: integer
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Surfe API key issued from the Surfe dashboard, sent as `Authorization: Bearer {api-key}`.'

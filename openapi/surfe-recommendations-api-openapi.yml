@@ -1,0 +1,207 @@
+openapi: 3.0.3
+info:
+  title: Surfe Account Recommendations API
+  version: '2.0'
+  description: 'The Surfe API (formerly Leadjet) provides B2B people and company search plus enrichment. It returns verified professional emails and mobile phone numbers, company firmographics, and lookalike account recommendations. Bulk enrichment is asynchronous: start a job with POST and either poll the GET job endpoint or receive a webhook callback. All requests are authenticated with a Bearer API key managed from the Surfe dashboard.'
+  contact:
+    name: Surfe API Support
+    url: https://developers.surfe.com/
+  x-former-name: Leadjet
+servers:
+- url: https://api.surfe.com/v2
+  description: Surfe API v2 production base URL
+security:
+- bearerAuth: []
+tags:
+- name: Recommendations
+  description: ICP definition and lookalike account recommendations.
+paths:
+  /recommendations/icp:
+    post:
+      tags:
+      - Recommendations
+      summary: Create or update ICP
+      description: Create or update the Ideal Customer Profile used to generate lookalike account recommendations.
+      operationId: upsertICP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ICPDefinition'
+      responses:
+        '200':
+          description: ICP saved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ICPDefinition'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /recommendations/fetch:
+    post:
+      tags:
+      - Recommendations
+      summary: Fetch lookalike recommendations
+      description: Fetch lookalike account recommendations resembling the best-fit companies defined by the ICP.
+      operationId: fetchRecommendations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                  minimum: 1
+                  maximum: 200
+                  description: Maximum number of recommendations to return.
+                pageToken:
+                  type: string
+                  description: Pagination token from a previous response.
+      responses:
+        '200':
+          description: Lookalike company recommendations.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  companies:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Company'
+                  nextPageToken:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  responses:
+    RateLimited:
+      description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    ICPDefinition:
+      type: object
+      properties:
+        name:
+          type: string
+        filters:
+          $ref: '#/components/schemas/CompanyFilters'
+    Range:
+      type: object
+      properties:
+        from:
+          type: integer
+        to:
+          type: integer
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+    Company:
+      type: object
+      properties:
+        name:
+          type: string
+        domain:
+          type: string
+        websites:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        industry:
+          type: string
+        keywords:
+          type: array
+          items:
+            type: string
+        employeeCount:
+          type: integer
+        revenue:
+          type: string
+        founded:
+          type: integer
+        hqCountry:
+          type: string
+        hqAddress:
+          type: string
+        linkedInUrl:
+          type: string
+        linkedInFollowersCount:
+          type: integer
+        phones:
+          type: array
+          items:
+            type: string
+        isPublic:
+          type: boolean
+        stockExchange:
+          type: string
+        stockSymbol:
+          type: string
+        fundingRounds:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              amount:
+                type: number
+              date:
+                type: string
+        parentOrganization:
+          type: string
+        externalID:
+          type: string
+        status:
+          type: string
+    CompanyFilters:
+      type: object
+      description: Company-based filters.
+      properties:
+        industries:
+          type: array
+          items:
+            type: string
+        employeeCount:
+          $ref: '#/components/schemas/Range'
+        revenue:
+          $ref: '#/components/schemas/Range'
+        countries:
+          type: array
+          items:
+            type: string
+        domains:
+          type: array
+          items:
+            type: string
+        keywords:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Surfe API key issued from the Surfe dashboard, sent as `Authorization: Bearer {api-key}`.'

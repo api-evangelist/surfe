@@ -7,7 +7,20 @@ description: Surfe (formerly Leadjet) is a B2B contact-data and sales-intelligen
   and company search plus enrichment. The Surfe API returns verified business emails
   and mobile phone numbers, company firmographics, and lookalike account recommendations,
   billed against a credit-based model.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/surfe.png
 tags:
 - B2B Data
 - Contact Data
@@ -20,113 +33,94 @@ created: '2026-07-01'
 modified: '2026-07-01'
 specificationVersion: '0.19'
 apis:
-- aid: surfe:surfe-people-search-api
-  name: Surfe People Search API
-  tags:
-  - People Search
-  - Prospecting
-  - Contacts
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: surfe:surfe-account-api
+  name: Surfe Account API
+  description: Credit balance and account utilities.
   humanURL: https://developers.surfe.com/public-009-search-people-v2
   baseURL: https://api.surfe.com/v2
-  properties:
-  - url: https://developers.surfe.com/public-009-search-people-v2
-    type: Documentation
-  - url: https://developers.surfe.com/
-    type: APIReference
-  - url: openapi/surfe-openapi.yml
-    type: OpenAPI
-  description: Searches for people by persona and company filters (job titles,
-    seniorities, departments, industries, headcount, location). Job titles are
-    expanded automatically with acronym and semantic matching, and results are
-    paged with a nextPageToken.
-- aid: surfe:surfe-people-enrichment-api
-  name: Surfe People Enrichment API
   tags:
-  - People Enrichment
-  - Email
-  - Mobile Phone
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.surfe.com/public-015-create-people-bulk-enrichment
-  baseURL: https://api.surfe.com/v2
+  - Account
   properties:
-  - url: https://developers.surfe.com/public-015-create-people-bulk-enrichment
-    type: Documentation
-  - url: openapi/surfe-openapi.yml
-    type: OpenAPI
-  description: Asynchronous bulk enrichment of up to 10,000 people per request by
-    LinkedIn URL or name plus company, returning verified professional emails,
-    mobile phone numbers, LinkedIn URLs, and job history. Start with POST, then
-    poll the GET job endpoint or receive a webhook callback.
-- aid: surfe:surfe-company-search-api
-  name: Surfe Company Search API
+  - type: OpenAPI
+    url: openapi/surfe-account-api-openapi.yml
+  - type: Documentation
+    url: https://developers.surfe.com/public-009-search-people-v2
+  - type: APIReference
+    url: https://developers.surfe.com/
+  - type: Documentation
+    url: https://developers.surfe.com/public-015-create-people-bulk-enrichment
+  - type: Documentation
+    url: https://developers.surfe.com/public-011-search-companies
+  - type: Documentation
+    url: https://developers.surfe.com/public-014-get-bulk-enrichment-organizations
+  - type: Documentation
+    url: https://developers.surfe.com/
+- aid: surfe:surfe-companies-api
+  name: Surfe Companies API
+  description: Search and enrich organizations.
+  humanURL: https://developers.surfe.com/public-009-search-people-v2
+  baseURL: https://api.surfe.com/v2
   tags:
-  - Company Search
-  - Firmographics
-  - ICP
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.surfe.com/public-011-search-companies
-  baseURL: https://api.surfe.com/v2
+  - Companies
   properties:
-  - url: https://developers.surfe.com/public-011-search-companies
-    type: Documentation
-  - url: openapi/surfe-openapi.yml
-    type: OpenAPI
-  description: Searches for companies against Ideal Customer Profile (ICP) filters
-    such as industry, employee count, revenue, location, and keywords, returning
-    matching organizations with domains and firmographic metadata.
-- aid: surfe:surfe-company-enrichment-api
-  name: Surfe Company Enrichment API
+  - type: OpenAPI
+    url: openapi/surfe-companies-api-openapi.yml
+  - type: Documentation
+    url: https://developers.surfe.com/public-009-search-people-v2
+  - type: APIReference
+    url: https://developers.surfe.com/
+  - type: Documentation
+    url: https://developers.surfe.com/public-015-create-people-bulk-enrichment
+  - type: Documentation
+    url: https://developers.surfe.com/public-011-search-companies
+  - type: Documentation
+    url: https://developers.surfe.com/public-014-get-bulk-enrichment-organizations
+  - type: Documentation
+    url: https://developers.surfe.com/
+- aid: surfe:surfe-people-api
+  name: Surfe People API
+  description: Search and enrich individual contacts.
+  humanURL: https://developers.surfe.com/public-009-search-people-v2
+  baseURL: https://api.surfe.com/v2
   tags:
-  - Company Enrichment
-  - Firmographics
-  - Async
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.surfe.com/public-014-get-bulk-enrichment-organizations
-  baseURL: https://api.surfe.com/v2
+  - People
   properties:
-  - url: https://developers.surfe.com/public-014-get-bulk-enrichment-organizations
-    type: Documentation
-  - url: openapi/surfe-openapi.yml
-    type: OpenAPI
-  description: Asynchronous bulk enrichment of companies by domain, returning
-    firmographics including description, employee count, revenue range, founding
-    year, HQ location, industry, keywords, funding rounds, IPO/stock details,
-    LinkedIn URL and follower count. Start with POST, then poll the GET job endpoint.
+  - type: OpenAPI
+    url: openapi/surfe-people-api-openapi.yml
+  - type: Documentation
+    url: https://developers.surfe.com/public-009-search-people-v2
+  - type: APIReference
+    url: https://developers.surfe.com/
+  - type: Documentation
+    url: https://developers.surfe.com/public-015-create-people-bulk-enrichment
+  - type: Documentation
+    url: https://developers.surfe.com/public-011-search-companies
+  - type: Documentation
+    url: https://developers.surfe.com/public-014-get-bulk-enrichment-organizations
+  - type: Documentation
+    url: https://developers.surfe.com/
 - aid: surfe:surfe-recommendations-api
   name: Surfe Recommendations API
+  description: ICP definition and lookalike account recommendations.
+  humanURL: https://developers.surfe.com/public-009-search-people-v2
+  baseURL: https://api.surfe.com/v2
   tags:
-  - Lookalikes
   - Recommendations
-  - ICP
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.surfe.com/
-  baseURL: https://api.surfe.com/v2
   properties:
-  - url: https://developers.surfe.com/
-    type: Documentation
-  - url: openapi/surfe-openapi.yml
-    type: OpenAPI
-  description: Defines an Ideal Customer Profile and fetches lookalike account
-    recommendations that resemble the best-fit companies, for account-based
-    prospecting and list expansion.
-- aid: surfe:surfe-credits-api
-  name: Surfe Credits API
-  tags:
-  - Credits
-  - Usage
-  - Balance
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.surfe.com/
-  baseURL: https://api.surfe.com/v2
-  properties:
-  - url: https://developers.surfe.com/
-    type: Documentation
-  - url: openapi/surfe-openapi.yml
-    type: OpenAPI
-  description: Returns the remaining credit balance across the separate email,
-    mobile, and search/ICP credit pools so integrations can check quota before
-    spending on enrichment.
+  - type: OpenAPI
+    url: openapi/surfe-recommendations-api-openapi.yml
+  - type: Documentation
+    url: https://developers.surfe.com/public-009-search-people-v2
+  - type: APIReference
+    url: https://developers.surfe.com/
+  - type: Documentation
+    url: https://developers.surfe.com/public-015-create-people-bulk-enrichment
+  - type: Documentation
+    url: https://developers.surfe.com/public-011-search-companies
+  - type: Documentation
+    url: https://developers.surfe.com/public-014-get-bulk-enrichment-organizations
+  - type: Documentation
+    url: https://developers.surfe.com/
 common:
 - type: LinkedIn
   url: https://www.linkedin.com/company/surfe

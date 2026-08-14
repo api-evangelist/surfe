@@ -2,11 +2,11 @@ aid: surfe
 url: https://raw.githubusercontent.com/api-evangelist/surfe/refs/heads/main/apis.yml
 name: Surfe
 kind: company
-description: Surfe (formerly Leadjet) is a B2B contact-data and sales-intelligence
-  platform that syncs LinkedIn prospects into the CRM and exposes an API for people
-  and company search plus enrichment. The Surfe API returns verified business emails
-  and mobile phone numbers, company firmographics, and lookalike account recommendations,
-  billed against a credit-based model.
+description: Surfe (formerly Leadjet) is a B2B contact-data and sales-intelligence platform
+  that syncs LinkedIn prospects into the CRM and exposes an API for people and company search
+  plus enrichment. The Surfe API returns verified business emails and mobile phone numbers,
+  company firmographics, and lookalike account recommendations, billed against a credit-based
+  model.
 accessModel:
   pricing: freemium
   onboarding: self-serve
@@ -30,13 +30,13 @@ tags:
 - CRM
 - Prospecting
 created: '2026-07-01'
-modified: '2026-07-01'
+modified: '2026-08-13'
 specificationVersion: '0.19'
 apis:
 - aid: surfe:surfe-account-api
   name: Surfe Account API
   description: Credit balance and account utilities.
-  humanURL: https://developers.surfe.com/public-009-search-people-v2
+  humanURL: https://developers.surfe.com/public-017-get-credits
   baseURL: https://api.surfe.com/v2
   tags:
   - Account
@@ -44,21 +44,15 @@ apis:
   - type: OpenAPI
     url: openapi/surfe-account-api-openapi.yml
   - type: Documentation
-    url: https://developers.surfe.com/public-009-search-people-v2
+    url: https://developers.surfe.com/public-017-get-credits
   - type: APIReference
     url: https://developers.surfe.com/
-  - type: Documentation
-    url: https://developers.surfe.com/public-015-create-people-bulk-enrichment
-  - type: Documentation
-    url: https://developers.surfe.com/public-011-search-companies
-  - type: Documentation
-    url: https://developers.surfe.com/public-014-get-bulk-enrichment-organizations
-  - type: Documentation
-    url: https://developers.surfe.com/
+  - type: Overlay
+    url: overlays/surfe-account-overlay.yaml
 - aid: surfe:surfe-companies-api
   name: Surfe Companies API
   description: Search and enrich organizations.
-  humanURL: https://developers.surfe.com/public-009-search-people-v2
+  humanURL: https://developers.surfe.com/public-011-search-companies
   baseURL: https://api.surfe.com/v2
   tags:
   - Companies
@@ -66,17 +60,11 @@ apis:
   - type: OpenAPI
     url: openapi/surfe-companies-api-openapi.yml
   - type: Documentation
-    url: https://developers.surfe.com/public-009-search-people-v2
+    url: https://developers.surfe.com/public-011-search-companies
   - type: APIReference
     url: https://developers.surfe.com/
-  - type: Documentation
-    url: https://developers.surfe.com/public-015-create-people-bulk-enrichment
-  - type: Documentation
-    url: https://developers.surfe.com/public-011-search-companies
-  - type: Documentation
-    url: https://developers.surfe.com/public-014-get-bulk-enrichment-organizations
-  - type: Documentation
-    url: https://developers.surfe.com/
+  - type: Overlay
+    url: overlays/surfe-companies-overlay.yaml
 - aid: surfe:surfe-people-api
   name: Surfe People API
   description: Search and enrich individual contacts.
@@ -91,18 +79,12 @@ apis:
     url: https://developers.surfe.com/public-009-search-people-v2
   - type: APIReference
     url: https://developers.surfe.com/
-  - type: Documentation
-    url: https://developers.surfe.com/public-015-create-people-bulk-enrichment
-  - type: Documentation
-    url: https://developers.surfe.com/public-011-search-companies
-  - type: Documentation
-    url: https://developers.surfe.com/public-014-get-bulk-enrichment-organizations
-  - type: Documentation
-    url: https://developers.surfe.com/
+  - type: Overlay
+    url: overlays/surfe-people-overlay.yaml
 - aid: surfe:surfe-recommendations-api
   name: Surfe Recommendations API
   description: ICP definition and lookalike account recommendations.
-  humanURL: https://developers.surfe.com/public-009-search-people-v2
+  humanURL: https://developers.surfe.com/public-019-v2-recommendations-icp-post
   baseURL: https://api.surfe.com/v2
   tags:
   - Recommendations
@@ -110,17 +92,11 @@ apis:
   - type: OpenAPI
     url: openapi/surfe-recommendations-api-openapi.yml
   - type: Documentation
-    url: https://developers.surfe.com/public-009-search-people-v2
+    url: https://developers.surfe.com/public-019-v2-recommendations-icp-post
   - type: APIReference
     url: https://developers.surfe.com/
-  - type: Documentation
-    url: https://developers.surfe.com/public-015-create-people-bulk-enrichment
-  - type: Documentation
-    url: https://developers.surfe.com/public-011-search-companies
-  - type: Documentation
-    url: https://developers.surfe.com/public-014-get-bulk-enrichment-organizations
-  - type: Documentation
-    url: https://developers.surfe.com/
+  - type: Overlay
+    url: overlays/surfe-recommendations-overlay.yaml
 common:
 - type: LinkedIn
   url: https://www.linkedin.com/company/surfe
@@ -134,15 +110,84 @@ common:
   url: rate-limits/surfe-rate-limits.yml
 - type: FinOps
   url: finops/surfe-finops.yml
+- type: AgenticAccess
+  url: agentic-access/surfe-agentic-access.yml
+- type: DomainSecurity
+  url: security/surfe-domain-security.yml
+- type: Authentication
+  url: authentication/surfe-authentication.yml
+- url: https://www.surfe.com/blog/feed/
+  type: Blog
+- type: DeveloperPortal
+  url: https://developers.surfe.com/
+- type: APIReference
+  url: https://developers.surfe.com/
+- type: GettingStarted
+  url: https://developers.surfe.com/
+- type: Support
+  url: https://intercom.help/surfe/en/
+- type: GitHubOrganization
+  url: https://github.com/surfe
+- type: Pricing
+  url: https://www.surfe.com/pricing/
+- type: SignUp
+  url: https://app.surfe.com/sign-up
+- type: Login
+  url: https://app.surfe.com/sign-in
+- type: TermsOfService
+  url: https://www.surfe.com/terms-and-conditions-api/
+  name: Terms and Conditions - API
+- type: PrivacyPolicy
+  url: https://www.surfe.com/privacy-policy/
+- type: StatusPage
+  url: https://status.surfe.com/
+- type: ChangeLog
+  url: https://developers.surfe.com/changelog
+- type: ChangeLog
+  url: changelog/surfe-changelog.yml
+- type: Lifecycle
+  url: lifecycle/surfe-lifecycle.yml
+- type: Security
+  url: https://github.com/Surfe/surfer/blob/main/SECURITY.md
+  name: Security policy (vulnerability reporting)
+- type: VulnerabilityDisclosure
+  url: security/surfe-vulnerability-disclosure.yml
+- type: TrustCenter
+  url: security/surfe-trust-center.yml
+- type: Compliance
+  url: https://www.surfe.com/security/
+  name: ISO 27001 certified, GDPR compliant
+- type: Conformance
+  url: conformance/surfe-conformance.yml
+- type: Conventions
+  url: conventions/surfe-conventions.yml
+- type: ErrorCatalog
+  url: errors/surfe-problem-types.yml
+- type: DataModel
+  url: data-model/surfe-data-model.yml
+- type: Packages
+  url: packages/surfe-packages.yml
+- type: CLI
+  url: cli/surfe-cli.yml
+- type: WellKnown
+  url: well-known/surfe-well-known.yml
+- type: MCPServer
+  url: mcp/surfe-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/surfe-tool-crosswalk.yml
+- type: OAuthScopes
+  url: scopes/surfe-scopes.yml
+- type: Webhooks
+  url: asyncapi/surfe-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/surfe-llms.txt
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
-common:
-  - type: AgenticAccess
-    url: agentic-access/surfe-agentic-access.yml
-  - type: DomainSecurity
-    url: security/surfe-domain-security.yml
-  - type: Authentication
-    url: authentication/surfe-authentication.yml
-  - url: https://www.surfe.com/blog/feed/
-    type: Blog
+x-enrichment:
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 27
+  pass: local-v1

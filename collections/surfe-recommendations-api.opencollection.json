@@ -1,0 +1,54 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Surfe Account Recommendations API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Recommendations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create or update ICP",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.surfe.com/v2/recommendations/icp",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create or update the Ideal Customer Profile used to generate lookalike account recommendations."
+        },
+        {
+          "info": {
+            "name": "Fetch lookalike recommendations",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.surfe.com/v2/recommendations/fetch",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fetch lookalike account recommendations resembling the best-fit companies defined by the ICP."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,68 @@
+generated: '2026-08-13'
+method: searched
+source: https://developers.surfe.com/changelog
+description: >-
+  Surfe versions the API in the URI path and runs v1 and v2 side by side. It
+  keeps a dated, public changelog and a public status page, and it has shipped
+  at least one filter deprecation with an explicit non-breaking guarantee — but
+  it publishes NO standing deprecation policy, no sunset window, and no SLA.
+versioning:
+  scheme: uri-path
+  current: v2
+  base: https://api.surfe.com/v2
+  also_live:
+  - version: v1
+    base: https://api.surfe.com/v1
+    evidence: >-
+      GET /v1/people/search/filters is the currently documented filter-vocabulary
+      endpoint (https://developers.surfe.com/public-008-people-filters), and the
+      2026-06-09 changelog entry names POST /v1/people/search alongside its v2
+      sibling. v1 is not marked deprecated anywhere in the docs.
+  docs: https://developers.surfe.com/changelog
+  media_type_versioning: false
+  header_versioning: false
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: unknown
+  deprecation_header: unknown
+  note: >-
+    No deprecation policy page, sunset window, or RFC 8594 Sunset/Deprecation
+    header support is documented. Deprecations are announced only as changelog
+    entries.
+  observed_deprecations:
+  - item: '`countries` filter on POST /v2/people/search and POST /v2/companies/search'
+    announced: '2026-05-04'
+    replacement: '`localities` filter'
+    breaking: false
+    provider_statement: >-
+      "This deprecation is non-breaking — existing API integrations using the
+      countries filter will continue to work as before."
+    source: https://developers.surfe.com/changelog
+sla:
+  url: null
+  uptime_target: null
+  note: No published SLA or uptime commitment was found on surfe.com or developers.surfe.com.
+status_page:
+  url: https://status.surfe.com/
+  status: 200
+  provider: Better Stack
+  observed: '2026-08-13'
+  linked_from: https://www.surfe.com/pricing/ (site footer, "Status")
+support:
+  api_support_email: api.support@surfe.com
+  security_email: security@surfe.com
+  help_center: https://intercom.help/surfe/en/
+  feedback_form: https://tally.so/r/mDZGpR
+release_cadence:
+  observed_window: '2025-09 through 2026-07'
+  entries_2026: 20
+  note: >-
+    Roughly two to five dated changelog entries per month through the first half
+    of 2026, mixing new filters, new endpoints, credit-model changes and
+    documentation corrections. Most recent entry at time of capture:
+    2026-07-31.
+deprecated_operations: []
+deprecated_operations_note: >-
+  No operation in openapi/ carries `deprecated: true`. The only deprecation Surfe
+  has announced is at the request-filter level, not the operation level.

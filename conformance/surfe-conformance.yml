@@ -1,0 +1,136 @@
+generated: '2026-08-13'
+method: searched
+source: https://developers.surfe.com/ + well-known/surfe-well-known.yml + https://www.surfe.com/security/
+description: >-
+  Which cross-cutting standards the Surfe surface actually conforms to. The
+  pattern is lopsided: the MCP/OAuth side is standards-dense (RFC 8414, RFC
+  9728, PKCE, MCP itself), while the REST side implements almost no
+  interoperability standard beyond plain HTTP + JSON — no OpenAPI document, no
+  RFC 9457 problem details, no RFC 8594 sunset headers, no RFC 9116 security.txt,
+  no standardised rate-limit headers.
+standards:
+- id: oauth2
+  name: OAuth 2.0 (RFC 6749)
+  conforms: true
+  scope: mcp, cli
+  evidence: >-
+    Authorization code grant with refresh tokens advertised at
+    https://mcp.eu.surfe.com/.well-known/oauth-authorization-server; the surfer
+    CLI performs the same flow on login.
+- id: rfc8414
+  name: OAuth 2.0 Authorization Server Metadata
+  conforms: true
+  scope: mcp
+  evidence: 'https://mcp.eu.surfe.com/.well-known/oauth-authorization-server returns 200 application/json (saved verbatim to well-known/).'
+- id: rfc9728
+  name: OAuth 2.0 Protected Resource Metadata
+  conforms: true
+  scope: mcp
+  evidence: >-
+    https://mcp.eu.surfe.com/.well-known/oauth-protected-resource/mcp returns
+    200; the path is advertised via the resource_metadata parameter of the
+    WWW-Authenticate header on a 401.
+- id: rfc7636
+  name: PKCE
+  conforms: true
+  scope: mcp, cli
+  evidence: 'code_challenge_methods_supported: ["S256"] in the authorization server metadata; the CLI README states OAuth 2.0 + PKCE.'
+- id: rfc7591
+  name: OAuth 2.0 Dynamic Client Registration
+  conforms: true
+  scope: mcp
+  evidence: 'registration_endpoint: https://mcp.eu.surfe.com/register advertised in the authorization server metadata.'
+- id: rfc7009
+  name: OAuth 2.0 Token Revocation
+  conforms: true
+  scope: mcp
+  evidence: 'revocation_endpoint: https://mcp.eu.surfe.com/revoke advertised in the authorization server metadata.'
+- id: rfc6750
+  name: OAuth 2.0 Bearer Token Usage
+  conforms: true
+  scope: rest, mcp
+  evidence: '`Authorization: Bearer {api-key}` on REST; bearer_methods_supported ["header"] on the MCP resource metadata.'
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  scope: mcp
+  evidence: >-
+    Hosted MCP server documented at https://developers.surfe.com/mcp and probed
+    live at https://mcp.eu.surfe.com/mcp (JSON-RPC over HTTP, 401 invalid_token
+    when unauthenticated).
+- id: openidconnect
+  name: OpenID Connect Discovery
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404 on every Surfe host (401 on api.surfe.com's blanket gate).
+- id: openapi
+  name: OpenAPI Specification
+  conforms: false
+  evidence: >-
+    No OpenAPI/Swagger document is published. Probed 2026-08-13:
+    api.surfe.com/{openapi.json,openapi.yaml,swagger.json,api-docs,docs,redoc}
+    all 401 (blanket auth gate);
+    developers.surfe.com/{openapi.json,openapi.yaml,swagger.json} all 404 HTML.
+    The openapi/ files in this repo are API Evangelist renderings of the
+    published endpoint reference, not a provider artifact.
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  evidence: No AsyncAPI document; the event surface is documented webhooks only (asyncapi/surfe-webhooks.yml).
+- id: rfc9457
+  name: Problem Details for HTTP APIs
+  conforms: false
+  evidence: 'Error envelope is {"code": <int>, "message": <string>} with content-type application/json — not application/problem+json.'
+- id: rfc8594
+  name: Sunset HTTP Header
+  conforms: false
+  evidence: No Sunset or Deprecation header support documented; deprecations are announced in the changelog only.
+- id: rfc9116
+  name: security.txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on every Surfe host.
+- id: ratelimit-headers
+  name: RateLimit header fields for HTTP (draft)
+  conforms: false
+  evidence: >-
+    https://developers.surfe.com/rate-limits documents the limits but no
+    response headers — no RateLimit-*, X-RateLimit-* or Retry-After is
+    published.
+- id: idempotency-key
+  name: The Idempotency-Key HTTP Header Field (draft)
+  conforms: false
+  evidence: No idempotency key or request-deduplication mechanism is documented on any endpoint.
+- id: jsonapi
+  name: 'JSON:API'
+  conforms: false
+- id: odata
+  name: OData
+  conforms: false
+- id: scim
+  name: SCIM 2.0
+  conforms: false
+- id: fhir
+  name: FHIR
+  conforms: false
+- id: iso27001
+  name: ISO/IEC 27001
+  conforms: true
+  kind: organizational-certification
+  evidence: 'https://www.surfe.com/security/ — "ISO 27001 certified"; repeated on https://www.surfe.com/pricing/.'
+  caveat: Certificate document, scope statement and auditor are not published.
+- id: gdpr
+  name: GDPR
+  conforms: true
+  kind: regulatory-compliance
+  evidence: >-
+    https://www.surfe.com/security/ states GDPR compliance as both Data
+    Processor and Data Controller; Surfe additionally publishes a Legitimate
+    Interests Assessment and an opt-out mechanism as public pages.
+- id: soc2
+  name: SOC 2
+  conforms: false
+  evidence: Not claimed anywhere on surfe.com.
+summary:
+  conforms: 11
+  does_not_conform: 12
+  strongest_surface: MCP / OAuth
+  weakest_surface: REST runtime semantics (no spec, no problem details, no rate-limit headers, no idempotency)

@@ -1,0 +1,120 @@
+generated: '2026-08-13'
+method: derived
+source: mcp/surfe-mcp.yml + openapi/*.yml + https://developers.surfe.com/mcp
+description: >-
+  Binds each capability Surfe's hosted MCP server advertises to the OpenAPI
+  operation that backs it, so an agent tool inherits a real inputSchema from the
+  spec instead of a guessed one. Surfe's MCP tools/list is OAuth-gated, so the
+  binding is by documented capability and category, not by observed tool name —
+  confidence is recorded accordingly and no tool name is invented.
+surfaces:
+  openapi:
+    files:
+    - openapi/surfe-people-api-openapi.yml
+    - openapi/surfe-companies-api-openapi.yml
+    - openapi/surfe-recommendations-api-openapi.yml
+    - openapi/surfe-account-api-openapi.yml
+    base_url: https://api.surfe.com/v2
+    gated: false
+    note: >-
+      Surfe publishes no machine-readable OpenAPI document; these specs are
+      API Evangelist renderings of the published endpoint reference at
+      https://developers.surfe.com. The live API host answers every anonymous
+      request with 401.
+  graphql:
+    endpoint: null
+    note: Surfe publishes no GraphQL surface.
+  mcp:
+    url: https://mcp.eu.surfe.com/mcp
+    gated: true
+    note: tools/list returns 401 invalid_token anonymously (probed 2026-08-13).
+crosswalk:
+- tool: search_people
+  tool_name_verified: false
+  category: People
+  rest: [searchPeople]
+  binding: rest
+  confidence: high
+  note: >-
+    Surfe's MCP page lists "People — Search". Only one REST search operation
+    exists for people (POST /v2/people/search). Tool name is a placeholder
+    slug; the wire name requires authenticated tools/list.
+- tool: enrich_people_start
+  tool_name_verified: false
+  category: People
+  rest: [startPeopleEnrichment]
+  binding: rest
+  confidence: high
+  note: MCP page lists "People — start enrichment"; backed by POST /v2/people/enrich.
+- tool: enrich_people_get
+  tool_name_verified: false
+  category: People
+  rest: [getPeopleEnrichment]
+  binding: rest
+  confidence: high
+  note: MCP page lists "People — fetch enrichment results"; backed by GET /v2/people/enrich/{id}.
+- tool: search_companies
+  tool_name_verified: false
+  category: Companies
+  rest: [searchCompanies]
+  binding: rest
+  confidence: high
+- tool: enrich_companies_start
+  tool_name_verified: false
+  category: Companies
+  rest: [startCompanyEnrichment]
+  binding: rest
+  confidence: high
+- tool: enrich_companies_get
+  tool_name_verified: false
+  category: Companies
+  rest: [getCompanyEnrichment]
+  binding: rest
+  confidence: high
+- tool: get_credits
+  tool_name_verified: false
+  category: Account
+  rest: [getCredits]
+  binding: rest
+  confidence: high
+  note: >-
+    MCP page: "Account — Check remaining email and mobile credits", and the
+    documented smoke test is the prompt "Check my credits".
+mcp_only: []
+mcp_unresolved:
+- tool: null
+  reason: >-
+    Surfe states 8 tools; its own page enumerates 7 distinct capabilities. One
+    tool is unaccounted for and cannot be identified without an authenticated
+    tools/list. Not guessed.
+rest_only:
+- capability: Reverse email enrichment
+  operations: [findPeopleByEmail]
+  rest: POST /v2/people/find-by-email
+  reason: No corresponding capability appears in the documented MCP tool groups.
+- capability: ICP definition and lookalike recommendations
+  operations: [upsertICP, fetchRecommendations]
+  rest: [POST /v2/recommendations/icp, POST /v2/recommendations/fetch]
+  reason: >-
+    The Recommendations product is absent from the MCP surface entirely — the
+    MCP page groups tools only as People, Companies and Account. GET
+    /v2/recommendations/icp is documented at
+    https://developers.surfe.com/public-021-v2-recommendations-icp-get but is
+    not yet modelled in this repo's OpenAPI.
+- capability: Search filter vocabularies
+  operations: []
+  rest: GET /v1/people/search/filters
+  reason: >-
+    Documented at https://developers.surfe.com/public-008-people-filters (note:
+    v1 path, not v2). No MCP tool, and not yet modelled in this repo's OpenAPI.
+coverage:
+  mcp_tools_published: 8
+  mcp_capabilities_documented: 7
+  mcp_capabilities_bound: 7
+  mcp_tools_unresolved: 1
+  mcp_only: 0
+  rest_operations_total: 10
+  rest_operations_with_tool: 7
+  rest_only: 3
+  tool_names_verified: 0
+  tool_input_schemas_verified: 0

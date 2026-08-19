@@ -1,0 +1,86 @@
+generated: '2026-08-13'
+method: probed
+source: live GET of /.well-known/* on every Surfe host in apis.yml + the MCP host
+description: >-
+  Well-known discovery probe across every Surfe host. Two real documents are
+  served, both by the MCP server host mcp.eu.surfe.com: RFC 8414 OAuth 2.0
+  Authorization Server Metadata and RFC 9728 OAuth 2.0 Protected Resource
+  Metadata. No security.txt, no OpenID Connect discovery, no api-catalog, no
+  ai-plugin.json and no A2A agent card is served on any Surfe host. The REST API
+  host api.surfe.com answers EVERY path — well-known or not — with HTTP 401
+  {"code":401,"message":"Missing or wrong API key"}, so nothing under
+  /.well-known/ is anonymously reachable there.
+hosts:
+- host: mcp.eu.surfe.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    file: surfe-oauth-authorization-server.json
+    spec: RFC 8414
+  - path: /.well-known/oauth-protected-resource/mcp
+    status: 200
+    content_type: application/json
+    file: surfe-oauth-protected-resource.json
+    spec: RFC 9728
+    note: >-
+      Path advertised by the WWW-Authenticate header on an unauthenticated POST
+      to https://mcp.eu.surfe.com/mcp (resource_metadata=...). The unsuffixed
+      /.well-known/oauth-protected-resource returns 404.
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+- host: api.surfe.com
+  note: >-
+    Blanket auth gate. Every path returns 401 with the JSON body
+    {"code":401,"message":"Missing or wrong API key"} — including / and every
+    /.well-known/* path. This is an authentication wall, not a served document.
+  documents:
+  - {path: /.well-known/oauth-authorization-server, status: 401}
+  - {path: /.well-known/oauth-protected-resource, status: 401}
+  - {path: /.well-known/openid-configuration, status: 401}
+  - {path: /.well-known/security.txt, status: 401}
+  - {path: /.well-known/api-catalog, status: 401}
+  - {path: /.well-known/ai-plugin.json, status: 401}
+  - {path: /.well-known/agent-card.json, status: 401}
+  - {path: /.well-known/agent.json, status: 401}
+- host: developers.surfe.com
+  note: Next.js docs app; every miss renders a 404 HTML error page.
+  documents:
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+- host: www.surfe.com
+  note: WordPress marketing site; all probes 404.
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+- host: app.surfe.com
+  note: Application host; all probes 404.
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+summary:
+  documents_served: 2
+  security_txt: false
+  openid_configuration: false
+  api_catalog: false
+  ai_plugin: false
+  agent_card: false

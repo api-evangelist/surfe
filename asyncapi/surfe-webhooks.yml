@@ -1,0 +1,89 @@
+generated: '2026-08-13'
+method: searched
+source: https://developers.surfe.com/webhooks
+spec_type: none
+asyncapi_published: false
+asyncapi_note: >-
+  Surfe publishes no AsyncAPI document and no streaming transport (no WebSocket,
+  no SSE). Its event surface is outbound HTTP webhooks only, so the webhook
+  catalog below is captured verbatim from the provider's own documentation
+  rather than fabricating an AsyncAPI. This matches the standing finding in
+  review.yml.
+description: >-
+  Surfe delivers enrichment results as outbound HTTP POST callbacks. Webhooks
+  are not subscribed to out of band — the caller supplies
+  `notificationOptions.webhookUrl` on the enrichment request itself, and Surfe
+  POSTs each event to that URL. Three event types are documented.
+delivery:
+  transport: https
+  method: POST
+  content_type: application/json
+  subscription_model: per-request
+  subscription_field: notificationOptions.webhookUrl
+  acknowledgement: >-
+    The receiver must respond HTTP 200 OK. Surfe states that a different status
+    "may" cause a retry "depending on your configuration" — the retry schedule,
+    backoff and give-up policy are not published.
+  signing: none_documented
+  signing_note: >-
+    No signature header, shared secret, or timestamp-replay protection is
+    documented for Surfe webhooks. A receiver cannot verify that a callback came
+    from Surfe from the request alone.
+  retries: unspecified
+envelope:
+  fields:
+  - {name: eventType, type: string, required: true, description: The event type discriminator.}
+  - {name: data, type: object, required: true, description: Event payload, shaped per event type.}
+  example: '{"eventType": "person.enrichment.completed", "data": { ... }}'
+events:
+- type: person.enrichment.completed
+  summary: A single contact inside a bulk enrichment has finished.
+  trigger: POST /v2/people/enrich with notificationOptions.webhookUrl set
+  cardinality: one per person in the batch
+  data:
+    enrichmentID: uuid of the enrichment job
+    person: >-
+      EnrichedPersonResponse — the same type returned in the `people` field of
+      GET /v2/people/enrich/{id}. Carries firstName, lastName, jobTitle,
+      seniorities, departments, companyName, companyDomain, country, location,
+      linkedInUrl, externalID, emails[] (email + validationStatus),
+      mobilePhones[] (mobilePhone + confidenceScore) and status.
+  source: https://developers.surfe.com/webhooks
+- type: person.batch-enrichment.completed
+  summary: Every contact in a bulk people enrichment has finished processing.
+  trigger: POST /v2/people/enrich with notificationOptions.webhookUrl set
+  cardinality: one per batch, in addition to the per-person events
+  data:
+    enrichmentID: uuid of the enrichment job
+    enrichmentCallbackURL: 'Absolute URL to retrieve the full result, e.g. https://api.surfe.com/v2/people/enrich/{id}'
+    message: Human-readable completion message
+  source: https://developers.surfe.com/webhooks
+- type: company.enrichment.completed
+  summary: A company inside a bulk enrichment has finished.
+  trigger: POST /v2/companies/enrich with notificationOptions.webhookUrl set
+  cardinality: one per company in the batch
+  data:
+    enrichmentID: uuid of the enrichment job
+    company: >-
+      The enriched organization record — name, websites[], description,
+      employeeCount, founded, hqAddress, hqCountry, industries[], externalID and
+      related firmographics.
+  source: https://developers.surfe.com/webhooks
+event_count: 3
+history:
+- date: '2026-04-21'
+  change: >-
+    Batch-completion webhook introduced. The changelog announces it as
+    `batch.enrichment.completed` with a payload carrying batchID, eventType and
+    a data object (enrichmentID, enrichmentCallbackURL, message); the current
+    webhooks reference documents the same event as
+    `person.batch-enrichment.completed` and does not show a batchID field. Both
+    names are published by Surfe; the webhooks reference is the newer surface.
+  sources:
+  - https://developers.surfe.com/changelog
+  - https://developers.surfe.com/webhooks
+gaps:
+- No webhook signature or verification mechanism is documented.
+- No retry policy, delivery-attempt limit, or dead-letter behaviour is published.
+- No endpoint to list, register, rotate or replay webhooks — the URL is per-request only.
+- No AsyncAPI, EventCatalog, or machine-readable event schema is published.

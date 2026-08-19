@@ -1,0 +1,41 @@
+generated: '2026-08-13'
+method: generated
+description: >-
+  Packaged Agent Skills for the Surfe API. One skill is provider-published and
+  saved verbatim (`surfer ai`); the other three are API Evangelist skills
+  grounded in operationIds verified against the specs in openapi/ and the
+  published endpoint reference at developers.surfe.com.
+skills:
+- file: surfe-surfer-cli-agent-prompt.md
+  name: 'Surfe: `surfer ai` system prompt (provider-published)'
+  method: searched
+  provider_published: true
+  source: https://github.com/Surfe/surfer/blob/main/cmd/ai.go
+  api: https://api.surfe.com/v2
+  operations: [searchPeople, startPeopleEnrichment, getPeopleEnrichment, searchCompanies, startCompanyEnrichment, getCompanyEnrichment, getCredits]
+- file: surfe-enrich-people-bulk.md
+  name: Bulk-enrich people with Surfe
+  method: generated
+  api: openapi/surfe-people-api-openapi.yml
+  operations: [startPeopleEnrichment, getPeopleEnrichment, getCredits]
+- file: surfe-search-and-qualify-accounts.md
+  name: Build and qualify a target account list with Surfe
+  method: generated
+  api: openapi/surfe-companies-api-openapi.yml
+  operations: [searchCompanies, startCompanyEnrichment, getCompanyEnrichment, searchPeople, getCredits]
+- file: surfe-icp-lookalike-recommendations.md
+  name: Define an ICP and fetch lookalike accounts
+  method: generated
+  api: openapi/surfe-recommendations-api-openapi.yml
+  operations: [upsertICP, fetchRecommendations, getCredits]
+grounding:
+  operation_ids_verified_against:
+  - openapi/surfe-people-api-openapi.yml
+  - openapi/surfe-companies-api-openapi.yml
+  - openapi/surfe-recommendations-api-openapi.yml
+  - openapi/surfe-account-api-openapi.yml
+  note: >-
+    Every operationId named in a skill exists verbatim in the referenced spec.
+    No operation was invented; documented endpoints not present in these specs
+    (GET /v2/recommendations/icp, GET /v1/people/search/filters) are referenced
+    by path and docs URL only, never by a fabricated operationId.

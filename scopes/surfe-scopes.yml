@@ -1,0 +1,38 @@
+generated: '2026-08-13'
+method: probed
+source: https://mcp.eu.surfe.com/.well-known/oauth-authorization-server
+docs: https://developers.surfe.com/mcp
+description: >-
+  Surfe's only OAuth scope surface is its hosted MCP server. The REST API is a
+  bearer API key with no scopes at all. The MCP authorization server advertises
+  exactly ONE scope — `surfe` — so authorization is all-or-nothing: a token that
+  can read credits can also spend them on enrichment. Per-tool consent is pushed
+  to the MCP client ("Each tool's permission is set in your client"), not to the
+  token.
+schemes:
+- name: surfeMcpOAuth
+  surface: mcp
+  source: well-known/surfe-oauth-authorization-server.json
+  issuer: https://mcp.eu.surfe.com/
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://mcp.eu.surfe.com/authorize
+    tokenUrl: https://mcp.eu.surfe.com/token
+    code_challenge_methods: [S256]
+scopes:
+- scope: surfe
+  description: >-
+    The single scope advertised in scopes_supported. Grants access to the Surfe
+    MCP tool surface (people search/enrich, company search/enrich, credits).
+    Surfe publishes no per-resource or read-vs-write scope split.
+  flows: [authorizationCode]
+  sources: [well-known/surfe-oauth-authorization-server.json]
+rest_api_scopes: []
+rest_api_note: >-
+  https://developers.surfe.com/api-key documents a single bearer API key with no
+  scope, permission or role model. Every endpoint accepts the same key.
+gaps:
+- >-
+  No read-only scope: an agent that only needs `GET /v2/credits` must be granted
+  the same token that can start credit-consuming enrichment jobs.
+- 'No resource-scoped tokens: people, companies and recommendations are not separable.'

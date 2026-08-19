@@ -1,0 +1,162 @@
+{
+  "item": [
+    {
+      "id": "258ef17c-4af2-4a05-bc74-32354913dfa4",
+      "name": "Account",
+      "description": {
+        "content": "Credit balance and account utilities.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "820a7e5e-5e29-4e3a-acba-d7c7c5d0c012",
+          "name": "Get credit balance",
+          "request": {
+            "name": "Get credit balance",
+            "description": {
+              "content": "Return the remaining credit balance across the email, mobile, and search/ICP credit pools.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "credits"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f79da11d-ef14-4ba6-99e8-317fcdb97eb5",
+              "name": "Current credit balances.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "credits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"emailCredits\": 9863,\n  \"mobileCredits\": 1567,\n  \"searchCredits\": 8680\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d1dffc10-3fcc-4e2e-b9f8-ce88b6995210",
+              "name": "Missing or invalid API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "credits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.surfe.com/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "5865472f-3170-4fd0-aa30-300fcd43102a",
+    "name": "Surfe Account API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Surfe API (formerly Leadjet) provides B2B people and company search plus enrichment. It returns verified professional emails and mobile phone numbers, company firmographics, and lookalike account recommendations. Bulk enrichment is asynchronous: start a job with POST and either poll the GET job endpoint or receive a webhook callback. All requests are authenticated with a Bearer API key managed from the Surfe dashboard.\n\nContact Support:\n Name: Surfe API Support",
+      "type": "text/plain"
+    }
+  }
+}

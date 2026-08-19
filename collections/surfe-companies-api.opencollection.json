@@ -1,0 +1,73 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Surfe Account Companies API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Companies",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search companies",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.surfe.com/v2/companies/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Search for companies against Ideal Customer Profile filters (industry, employee count, revenue, location, keywords). When credit charging is enabled the call deducts ICP search credits and returns 402 when the balance is insufficient."
+        },
+        {
+          "info": {
+            "name": "Enrich companies (start)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.surfe.com/v2/companies/enrich",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Start an asynchronous bulk enrichment job for companies identified by domain. Returns an enrichment ID for polling or a webhook callback."
+        },
+        {
+          "info": {
+            "name": "Enrich companies (get)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.surfe.com/v2/companies/enrich/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The enrichment job ID returned by the start operation."
+              }
+            ]
+          },
+          "docs": "Retrieve the status and results of a company enrichment job by ID. Poll until status is COMPLETED, or use a webhook to be notified."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

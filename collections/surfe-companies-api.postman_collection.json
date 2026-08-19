@@ -1,0 +1,812 @@
+{
+  "item": [
+    {
+      "id": "99b01b37-fa89-4527-bfb0-abc5adff1f4b",
+      "name": "Companies",
+      "description": {
+        "content": "Search and enrich organizations.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a438ea22-b554-48d4-8c62-6f0b14582f81",
+          "name": "Search companies",
+          "request": {
+            "name": "Search companies",
+            "description": {
+              "content": "Search for companies against Ideal Customer Profile filters (industry, employee count, revenue, location, keywords). When credit charging is enabled the call deducts ICP search credits and returns 402 when the balance is insufficient.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "companies",
+                "search"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filters\": {\n    \"industries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"employeeCount\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"revenue\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"domains\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"keywords\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"limit\": \"<integer>\",\n  \"pageToken\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e82f49ba-8bab-417d-9f06-48166e71447f",
+              "name": "Matching companies.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "companies",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": {\n    \"industries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"employeeCount\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"revenue\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"domains\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"keywords\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"limit\": \"<integer>\",\n  \"pageToken\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"companies\": [\n    {\n      \"name\": \"string\",\n      \"domain\": \"string\",\n      \"websites\": [\n        \"string\",\n        \"string\"\n      ],\n      \"description\": \"string\",\n      \"industry\": \"string\",\n      \"keywords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"employeeCount\": 6351,\n      \"revenue\": \"string\",\n      \"founded\": 2558,\n      \"hqCountry\": \"string\",\n      \"hqAddress\": \"string\",\n      \"linkedInUrl\": \"string\",\n      \"linkedInFollowersCount\": 8776,\n      \"phones\": [\n        \"string\",\n        \"string\"\n      ],\n      \"isPublic\": false,\n      \"stockExchange\": \"string\",\n      \"stockSymbol\": \"string\",\n      \"fundingRounds\": [\n        {\n          \"type\": \"string\",\n          \"amount\": 7862.2838677033205,\n          \"date\": \"string\"\n        },\n        {\n          \"type\": \"string\",\n          \"amount\": 5293.046364781947,\n          \"date\": \"string\"\n        }\n      ],\n      \"parentOrganization\": \"string\",\n      \"externalID\": \"string\",\n      \"status\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"domain\": \"string\",\n      \"websites\": [\n        \"string\",\n        \"string\"\n      ],\n      \"description\": \"string\",\n      \"industry\": \"string\",\n      \"keywords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"employeeCount\": 3113,\n      \"revenue\": \"string\",\n      \"founded\": 5709,\n      \"hqCountry\": \"string\",\n      \"hqAddress\": \"string\",\n      \"linkedInUrl\": \"string\",\n      \"linkedInFollowersCount\": 7673,\n      \"phones\": [\n        \"string\",\n        \"string\"\n      ],\n      \"isPublic\": false,\n      \"stockExchange\": \"string\",\n      \"stockSymbol\": \"string\",\n      \"fundingRounds\": [\n        {\n          \"type\": \"string\",\n          \"amount\": 9207.907075631572,\n          \"date\": \"string\"\n        },\n        {\n          \"type\": \"string\",\n          \"amount\": 8158.005920961191,\n          \"date\": \"string\"\n        }\n      ],\n      \"parentOrganization\": \"string\",\n      \"externalID\": \"string\",\n      \"status\": \"string\"\n    }\n  ],\n  \"total\": 4768,\n  \"nextPageToken\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6e9371d5-129e-4f05-819e-2a7eb63617f7",
+              "name": "Missing or invalid API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "companies",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": {\n    \"industries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"employeeCount\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"revenue\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"domains\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"keywords\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"limit\": \"<integer>\",\n  \"pageToken\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0504f528-8906-415b-86dd-7e02da755a3f",
+              "name": "Not enough credits to complete the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "companies",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": {\n    \"industries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"employeeCount\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"revenue\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"domains\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"keywords\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"limit\": \"<integer>\",\n  \"pageToken\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f723d698-3b6d-41ed-98d6-5587312b9ef5",
+              "name": "Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "companies",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": {\n    \"industries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"employeeCount\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"revenue\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"domains\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"keywords\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"limit\": \"<integer>\",\n  \"pageToken\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b4aba120-dc44-4829-9d4e-e24c196856c3",
+          "name": "Enrich companies (start)",
+          "request": {
+            "name": "Enrich companies (start)",
+            "description": {
+              "content": "Start an asynchronous bulk enrichment job for companies identified by domain. Returns an enrichment ID for polling or a webhook callback.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "companies",
+                "enrich"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"companies\": [\n    {\n      \"domain\": \"<string>\",\n      \"externalID\": \"<string>\"\n    }\n  ],\n  \"include\": {\n    \"firmographics\": \"<boolean>\",\n    \"phoneNumbers\": \"<boolean>\"\n  },\n  \"notificationOptions\": {\n    \"webhookUrl\": \"<uri>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2a608740-1da1-47c8-b010-3cd8decc716b",
+              "name": "Enrichment job accepted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "companies",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"companies\": [\n    {\n      \"domain\": \"<string>\",\n      \"externalID\": \"<string>\"\n    }\n  ],\n  \"include\": {\n    \"firmographics\": \"<boolean>\",\n    \"phoneNumbers\": \"<boolean>\"\n  },\n  \"notificationOptions\": {\n    \"webhookUrl\": \"<uri>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"enrichmentID\": \"2c0c2e39-38ae-28bc-200b-c703e053c667\",\n  \"enrichmentCallbackURL\": \"http://BvXs.uhqfP4UFHRMjcrblDfMgYrb+IboK3YlS+ncZI5JtfD\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d422cf2a-7052-441e-a20f-47eaafd4780b",
+              "name": "Missing or invalid API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "companies",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"companies\": [\n    {\n      \"domain\": \"<string>\",\n      \"externalID\": \"<string>\"\n    }\n  ],\n  \"include\": {\n    \"firmographics\": \"<boolean>\",\n    \"phoneNumbers\": \"<boolean>\"\n  },\n  \"notificationOptions\": {\n    \"webhookUrl\": \"<uri>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "717db725-0259-42e6-8908-8f7a3eb509ee",
+              "name": "Not enough credits to complete the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "companies",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"companies\": [\n    {\n      \"domain\": \"<string>\",\n      \"externalID\": \"<string>\"\n    }\n  ],\n  \"include\": {\n    \"firmographics\": \"<boolean>\",\n    \"phoneNumbers\": \"<boolean>\"\n  },\n  \"notificationOptions\": {\n    \"webhookUrl\": \"<uri>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8db6b196-a3bb-4926-a572-7b10a4619206",
+              "name": "Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "companies",
+                    "enrich"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"companies\": [\n    {\n      \"domain\": \"<string>\",\n      \"externalID\": \"<string>\"\n    }\n  ],\n  \"include\": {\n    \"firmographics\": \"<boolean>\",\n    \"phoneNumbers\": \"<boolean>\"\n  },\n  \"notificationOptions\": {\n    \"webhookUrl\": \"<uri>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "65988916-0fd4-4821-ae03-eaaef4e103df",
+          "name": "Enrich companies (get)",
+          "request": {
+            "name": "Enrich companies (get)",
+            "description": {
+              "content": "Retrieve the status and results of a company enrichment job by ID. Poll until status is COMPLETED, or use a webhook to be notified.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "companies",
+                "enrich",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The enrichment job ID returned by the start operation."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "34e1feaf-9ade-46b6-82db-00c35f2facc4",
+              "name": "Enrichment job status and enriched companies.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "companies",
+                    "enrich",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The enrichment job ID returned by the start operation."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"enrichmentID\": \"c0ce05ff-eaab-8e65-1b22-3f51dcb1bf15\",\n  \"status\": \"FAILED\",\n  \"percentCompleted\": 2729,\n  \"companies\": [\n    {\n      \"name\": \"string\",\n      \"domain\": \"string\",\n      \"websites\": [\n        \"string\",\n        \"string\"\n      ],\n      \"description\": \"string\",\n      \"industry\": \"string\",\n      \"keywords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"employeeCount\": 9595,\n      \"revenue\": \"string\",\n      \"founded\": 5255,\n      \"hqCountry\": \"string\",\n      \"hqAddress\": \"string\",\n      \"linkedInUrl\": \"string\",\n      \"linkedInFollowersCount\": 932,\n      \"phones\": [\n        \"string\",\n        \"string\"\n      ],\n      \"isPublic\": false,\n      \"stockExchange\": \"string\",\n      \"stockSymbol\": \"string\",\n      \"fundingRounds\": [\n        {\n          \"type\": \"string\",\n          \"amount\": 9983.38956059951,\n          \"date\": \"string\"\n        },\n        {\n          \"type\": \"string\",\n          \"amount\": 1544.5981877342717,\n          \"date\": \"string\"\n        }\n      ],\n      \"parentOrganization\": \"string\",\n      \"externalID\": \"string\",\n      \"status\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"domain\": \"string\",\n      \"websites\": [\n        \"string\",\n        \"string\"\n      ],\n      \"description\": \"string\",\n      \"industry\": \"string\",\n      \"keywords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"employeeCount\": 4074,\n      \"revenue\": \"string\",\n      \"founded\": 2612,\n      \"hqCountry\": \"string\",\n      \"hqAddress\": \"string\",\n      \"linkedInUrl\": \"string\",\n      \"linkedInFollowersCount\": 7969,\n      \"phones\": [\n        \"string\",\n        \"string\"\n      ],\n      \"isPublic\": true,\n      \"stockExchange\": \"string\",\n      \"stockSymbol\": \"string\",\n      \"fundingRounds\": [\n        {\n          \"type\": \"string\",\n          \"amount\": 2797.476983838345,\n          \"date\": \"string\"\n        },\n        {\n          \"type\": \"string\",\n          \"amount\": 4236.44828034645,\n          \"date\": \"string\"\n        }\n      ],\n      \"parentOrganization\": \"string\",\n      \"externalID\": \"string\",\n      \"status\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "84e0e1e5-db70-4ae8-b7bd-a99d6bd381ad",
+              "name": "Missing or invalid API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "companies",
+                    "enrich",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The enrichment job ID returned by the start operation."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "56b42322-ff42-460d-bd07-8ec7eaed3783",
+              "name": "Resource or job not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "companies",
+                    "enrich",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The enrichment job ID returned by the start operation."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a1afcd1a-74fe-4261-9c11-9034ac2a5709",
+              "name": "Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "companies",
+                    "enrich",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The enrichment job ID returned by the start operation."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.surfe.com/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "e5f1ba57-775a-4f11-9da9-3cbd427ebc47",
+    "name": "Surfe Account Companies API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Surfe API (formerly Leadjet) provides B2B people and company search plus enrichment. It returns verified professional emails and mobile phone numbers, company firmographics, and lookalike account recommendations. Bulk enrichment is asynchronous: start a job with POST and either poll the GET job endpoint or receive a webhook callback. All requests are authenticated with a Bearer API key managed from the Surfe dashboard.\n\nContact Support:\n Name: Surfe API Support",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,130 @@
+generated: '2026-08-13'
+method: searched
+source: https://developers.surfe.com/
+description: >-
+  Cross-cutting request/response semantics for the Surfe API v2 — how to
+  authenticate, page, poll, read errors, and stay inside the limits. Two facts
+  dominate integration design: enrichment is asynchronous (start returns an
+  enrichmentID, then poll or take a webhook), and almost every useful call
+  spends metered credits, so retries are not free.
+authentication:
+  style: bearer-api-key
+  header: 'Authorization: Bearer {api-key}'
+  scopes: none
+  docs: https://developers.surfe.com/api-key
+  detail: authentication/surfe-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    Surfe documents no idempotency key, no request-deduplication header, and no
+    safe-retry contract. This matters more here than on a typical API because
+    enrichment and search calls DEBIT CREDITS: a retried POST /v2/people/enrich
+    can be charged twice. The only client-side mitigation Surfe suggests is
+    deduplicating inputs before sending. No `Idempotency-Key` parameter appears
+    in any documented endpoint. Recorded as an honest absence — no Idempotency
+    pointer is emitted in apis.yml for this provider.
+pagination:
+  style: opaque-cursor
+  request_params:
+  - {name: pageToken, in: body, description: Token returned by the previous response.}
+  - {name: limit, in: body, description: 'Maximum results per page (documented range 1–200).'}
+  response_fields:
+  - {name: nextPageToken, description: Cursor for the next page; absent/empty when exhausted.}
+  - {name: total, description: Total matching records, where returned.}
+  applies_to: [POST /v2/people/search, POST /v2/companies/search, POST /v2/recommendations/fetch]
+  note: >-
+    Search results are also shaped by `peoplePerCompany` (max raised to 40 for
+    `peoplePerOrganization` on 2026-06-30 per the changelog), which caps results
+    per matched company rather than per page.
+async_jobs:
+  pattern: start-then-poll-or-webhook
+  start:
+    operations: [POST /v2/people/enrich, POST /v2/companies/enrich]
+    response_status: 202
+    response_fields: [enrichmentID, enrichmentCallbackURL, message]
+    max_batch: 10000
+  poll:
+    operations: ['GET /v2/people/enrich/{id}', 'GET /v2/companies/enrich/{id}']
+    terminal_states: [COMPLETED, FAILED]
+    progress_field: percentCompleted
+  callback:
+    field: notificationOptions.webhookUrl
+    detail: asyncapi/surfe-webhooks.yml
+  guidance: >-
+    Prefer the webhook over polling — polling burns request quota against the
+    same per-day allowance the enrichment itself consumes.
+field_selection:
+  style: include-map
+  detail: >-
+    POST /v2/people/enrich takes a required `include` object with at least one
+    of email / mobile / linkedInUrl / jobHistory. This is not sparse-fieldsets
+    convenience — each flag decides which CREDIT POOL is debited, so `include`
+    is a billing control as much as a projection.
+  companies: >-
+    POST /v2/companies/enrich takes `include` with firmographics and
+    phoneNumbers.
+metadata:
+  supported: true
+  field: externalID
+  detail: >-
+    Every person and company input accepts an `externalID` that is echoed back
+    on the enriched record, which is how results are reconciled to the caller's
+    own CRM rows. POST /v2/people/search additionally accepts
+    `organizationIDMappings` (added 2026-05-26) to map company domains to your
+    external IDs so search results come back already keyed to your system.
+request_tracing:
+  request_id_header: null
+  note: >-
+    No request-id or correlation-id response header is documented. (Surfe's
+    engineering org publishes a Traefik correlation-id middleware at
+    github.com/surfe/traefik-correlation-id, but no such header is documented on
+    the public API contract, so it is not claimed here.)
+versioning:
+  scheme: uri-path
+  current: v2
+  detail: lifecycle/surfe-lifecycle.yml
+error_envelope:
+  media_type: application/json
+  shape: '{"code": <int mirroring HTTP status>, "message": <string>}'
+  rfc9457: false
+  detail: errors/surfe-problem-types.yml
+rate_limit_signaling:
+  headers_documented: []
+  note: >-
+    Surfe documents the LIMITS (10 rps per user, burst 20, reset every minute)
+    but documents NO rate-limit response headers — no X-RateLimit-*, no
+    RateLimit-*, no Retry-After. An agent cannot read remaining budget from a
+    response; it can only observe the 429. This is the single biggest runtime
+    gap in the contract.
+  exhaustion_status: 429
+  exhaustion_body: '{"code": 429, "message": "Rate limit exceeded"}'
+  detail: rate-limits/surfe-rate-limits.yml
+quotas_and_credits:
+  model: >-
+    Separate metered pools — email finder credits, mobile finder credits, and
+    search credits — plus per-day request/result quotas that reset at midnight
+    in the user's local time. Search credits are opt-in and must be enabled by
+    contacting api.support@surfe.com.
+  balance_operation: GET /v2/credits
+  exhaustion_status: [403, 402]
+  exhaustion_note: See errors/surfe-problem-types.yml#inconsistencies for why both are published.
+  detail: plans/surfe-plans-pricing.yml
+request_shape_gotchas:
+  source: https://raw.githubusercontent.com/surfe/surfer/main/AGENTS.md
+  note: >-
+    Published by Surfe in its own CLI repository. Reproduced because a wrong
+    shape returns HTTP 500 rather than 400, which is otherwise indistinguishable
+    from a server fault.
+  rules:
+  - 'POST /v2/companies/search: filters MUST be nested under a required top-level `filters` object; the employee filter is `employeeCount` with `from`/`to` (NOT `employeesCount`/`min`/`max`).'
+  - 'POST /v2/people/search: NO `filters` wrapper — top-level `people` and `companies` objects.'
+  - 'POST /v2/companies/enrich: the array field is `companies` (NOT `organizations`).'
+  - 'POST /v2/people/enrich: `include` is required and must carry at least one field.'
+cross_references:
+  errors: errors/surfe-problem-types.yml
+  lifecycle: lifecycle/surfe-lifecycle.yml
+  authentication: authentication/surfe-authentication.yml
+  rate_limits: rate-limits/surfe-rate-limits.yml
+  webhooks: asyncapi/surfe-webhooks.yml
+  scopes: scopes/surfe-scopes.yml

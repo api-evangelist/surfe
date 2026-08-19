@@ -1,0 +1,119 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/_original/surfe-openapi.yml
+docs: https://developers.surfe.com/
+description: >-
+  Entity graph derived from the Surfe OpenAPI schemas and cross-checked against
+  the published endpoint reference. The model has no server-side persisted
+  identity for people or companies — there is no `personId` or `companyId` and no
+  GET-by-id for either. The only server-issued identifier in the whole API is
+  `enrichmentID`, which names an asynchronous JOB, not a record. Everything else
+  is joined on natural keys the caller supplies: a LinkedIn URL, a company
+  domain, or the caller's own `externalID`.
+identifiers:
+- name: enrichmentID
+  type: uuid
+  issued_by: server
+  scope: enrichment job
+  example_format: 01973f39-f391-7b75-8812-7aad73f798f6
+  note: 'Returned by POST /v2/people/enrich and POST /v2/companies/enrich; consumed by the matching GET and echoed on every webhook.'
+- name: externalID
+  type: string
+  issued_by: caller
+  scope: person and company
+  note: >-
+    The caller's own key. Echoed on enriched records and on webhook payloads —
+    the intended join back to the caller's CRM. POST /v2/people/search also
+    accepts `organizationIDMappings` to map company domains to externalIDs so
+    search results come back pre-keyed.
+- name: linkedinUrl
+  type: url
+  issued_by: third-party
+  scope: person
+  note: The strongest natural key for a person; sufficient on its own for enrichment.
+- name: companyDomain / domain
+  type: string
+  issued_by: third-party
+  scope: company
+  note: The natural key for a company. Company enrichment accepts nothing else.
+id_prefixes: []
+id_prefix_note: Surfe uses no prefixed identifiers (no `per_`/`cus_` style scheme).
+entities:
+- name: Person
+  schema: Person
+  description: A business contact returned by search.
+  key_fields: [firstName, lastName, jobTitle, seniorities, departments, companyName, companyDomain, country, linkedInUrl, externalID]
+  operations: [searchPeople]
+- name: EnrichedPerson
+  schema: EnrichedPerson
+  extends: Person
+  description: A Person plus the contact data the enrichment resolved.
+  key_fields: [emails, mobilePhones, jobHistory, status]
+  operations: [getPeopleEnrichment, findPeopleByEmail]
+  note: Also the payload type of the person.enrichment.completed webhook.
+- name: EmailRecord
+  schema: EmailRecord
+  key_fields: [email, type, validationStatus]
+  billing: Debits an email finder credit when resolved.
+- name: PhoneRecord
+  schema: PhoneRecord
+  key_fields: [mobilePhone, confidenceScore]
+  billing: Debits a mobile finder credit when resolved.
+- name: JobHistoryEntry
+  schema: JobHistoryEntry
+  key_fields: [companyName, companyDomain, jobTitle, startDate, endDate]
+- name: Company
+  schema: Company
+  description: An organization record, used for both search results and enrichment output.
+  key_fields: [name, domain, websites, description, industry, keywords, employeeCount, revenue, founded, hqCountry, hqAddress, linkedInUrl, linkedInFollowersCount, phones, isPublic, stockExchange, stockSymbol, fundingRounds, parentOrganization, externalID, status]
+  operations: [searchCompanies, getCompanyEnrichment, fetchRecommendations]
+- name: EnrichmentJob
+  schemas: [EnrichmentJobAccepted, PeopleEnrichmentResult, CompanyEnrichmentResult]
+  key_fields: [enrichmentID, status, percentCompleted, enrichmentCallbackURL]
+  states: [PENDING, IN_PROGRESS, COMPLETED, FAILED]
+- name: ICPDefinition
+  schema: ICPDefinition
+  description: The Ideal Customer Profile that drives lookalike recommendations.
+  key_fields: [name, filters]
+  operations: [upsertICP]
+  note: >-
+    GET /v2/recommendations/icp (documented at
+    https://developers.surfe.com/public-021-v2-recommendations-icp-get) returns
+    `icpFilters[]` and accepts an `externalUserId` query parameter, so an ICP is
+    scoped to a user — but that operation is not yet modelled in this repo's
+    OpenAPI, so no relationship is asserted for it here.
+- name: CreditBalance
+  schema: CreditBalance
+  key_fields: [emailCredits, mobileCredits, searchCredits]
+  operations: [getCredits]
+  note: Three independent meters, not one balance.
+- name: PeopleFilters
+  schema: PeopleFilters
+  kind: value-object
+- name: CompanyFilters
+  schema: CompanyFilters
+  kind: value-object
+  note: Reused by people search, company search and the ICP definition — the single most shared schema in the API.
+relationships:
+- {from: EnrichedPerson, to: Person, type: extends, via: allOf}
+- {from: EnrichedPerson, to: EmailRecord, type: has_many, via: emails}
+- {from: EnrichedPerson, to: PhoneRecord, type: has_many, via: mobilePhones}
+- {from: EnrichedPerson, to: JobHistoryEntry, type: has_many, via: jobHistory}
+- {from: Person, to: Company, type: belongs_to, via: companyDomain, note: 'Soft reference by natural key — there is no company id to point at.'}
+- {from: JobHistoryEntry, to: Company, type: belongs_to, via: companyDomain}
+- {from: PeopleEnrichmentResult, to: EnrichedPerson, type: has_many, via: people}
+- {from: CompanyEnrichmentResult, to: Company, type: has_many, via: companies}
+- {from: PeopleSearchResponse, to: Person, type: has_many, via: people}
+- {from: CompanySearchResponse, to: Company, type: has_many, via: companies}
+- {from: PeopleSearchRequest, to: PeopleFilters, type: has_one, via: people}
+- {from: PeopleSearchRequest, to: CompanyFilters, type: has_one, via: companies}
+- {from: CompanySearchRequest, to: CompanyFilters, type: has_one, via: filters}
+- {from: ICPDefinition, to: CompanyFilters, type: has_one, via: filters}
+- {from: PeopleEnrichmentRequest, to: PersonInput, type: has_many, via: people}
+- {from: EnrichmentJobAccepted, to: PeopleEnrichmentResult, type: has_one, via: enrichmentID}
+- {from: Company, to: Company, type: belongs_to, via: parentOrganization, note: Self-reference by name, not by id.}
+observations:
+- No read-by-id operation exists for a person or a company; the API is search-and-enrich, not CRUD.
+- 'The credit meters are part of the data model, not an aside: `include` on an enrichment request selects which meter is debited.'
+- 'Company appears on three different surfaces (search, enrichment, recommendations) with the same schema, so a client can treat it as one type across the whole API.'
+render: null

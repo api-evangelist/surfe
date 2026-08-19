@@ -1,0 +1,153 @@
+generated: '2026-08-13'
+method: searched
+source: https://developers.surfe.com/changelog
+description: >-
+  Surfe keeps a dated, public API changelog on its developer portal. Entries are
+  written per endpoint and distinguish additive changes, credit-model changes,
+  and documentation-only corrections. Deprecations are announced here and
+  explicitly labelled breaking or non-breaking.
+scheme: dated
+versioning: uri-path
+current_version: v2
+url: https://developers.surfe.com/changelog
+feed: null
+feed_note: No RSS/Atom or JSON feed is published for the API changelog.
+window: '2026-03-12 to 2026-07-31 (recent window; the page also carries 2025 entries)'
+entries:
+- date: '2026-07-31'
+  type: documentation
+  breaking: false
+  endpoints: [POST /v2/people/search]
+  highlights:
+  - Response example for `country` corrected to a lowercase ISO 3166-1 alpha-2 code (e.g. `fr`).
+  - Provider states the API response itself did not change.
+- date: '2026-07-01'
+  type: documentation
+  breaking: false
+  endpoints: [POST /v2/people/find-by-email]
+  highlights:
+  - Result field list now names `companyName` and `companyDomain` (previously `company`), matching GET /v2/people/enrich/{id} and the person.enrichment.completed webhook.
+- date: '2026-06-30'
+  type: addition
+  breaking: false
+  endpoints: [POST /v2/people/search]
+  highlights:
+  - '`peoplePerOrganization` maximum raised to 40.'
+- date: '2026-06-26'
+  type: documentation
+  breaking: false
+  highlights:
+  - Credits & Quotas expanded to cover people search, company search, company enrichment and reverse email enrichment.
+  - Quotas table reworked to show free vs search-credit limits side by side.
+- date: '2026-06-25'
+  type: documentation
+  breaking: false
+  endpoints: [POST /v2/people/enrich, POST /v2/companies/enrich]
+  highlights:
+  - Credit usage and personal-email cascade clarified; paid-plan cost documented for company enrichment.
+- date: '2026-06-22'
+  type: addition
+  breaking: false
+  endpoints: [POST /v2/people/search, POST /v2/companies/search]
+  highlights:
+  - New `isExcluded` flag on the company `localities` filter.
+  - New people filters `countriesExcluded` and `statesExcluded`.
+- date: '2026-06-19'
+  type: addition
+  breaking: false
+  endpoints: [POST /v2/people/search, POST /v2/companies/search]
+  highlights:
+  - Country-filter limit raised from 100 to 250.
+  - 'Personal email cascade added: set `acceptedEmailType` to `personal` on POST /v2/people/enrich (priced separately).'
+- date: '2026-06-16'
+  type: addition
+  breaking: false
+  endpoints: [POST /v2/people/enrich, 'GET /v2/people/enrich/{id}']
+  highlights:
+  - New `acceptedEmailType` request field; `emailType` now returned in enrichment results.
+- date: '2026-06-09'
+  type: pricing
+  breaking: false
+  endpoints: [POST /v2/people/search, POST /v1/people/search, POST /v2/companies/search]
+  highlights:
+  - 'Search credit formula changed from ceil(results / 25) to ceil(results / 10) — a 2.5x increase in credit consumption per call.'
+- date: '2026-06-08'
+  type: addition
+  breaking: false
+  endpoints: [POST /v2/people/enrich, POST /v2/people/search]
+  highlights:
+  - '`include.jobHistory` and `include.linkedInUrl` opened to all accounts.'
+  - POST /v2/people/search now returns 402 when search credits are insufficient.
+- date: '2026-06-04'
+  type: pricing
+  breaking: false
+  endpoints: [POST /v2/companies/search]
+  highlights:
+  - Deducts ceil(results / 25) ICP search credits per call when credit charging is enabled; returns 402 when credits are insufficient.
+  - Organization search quota clarified — 200/day default, up to 100,000/day with search credits.
+- date: '2026-05-28'
+  type: addition
+  breaking: false
+  highlights:
+  - New MCP Server documentation page — connection URL, Claude Desktop quickstart, example prompts.
+- date: '2026-05-26'
+  type: addition
+  breaking: false
+  endpoints: [POST /v2/people/enrich, POST /v2/people/search]
+  highlights:
+  - New `enrichmentOptions` (source, skipMobileEnrichmentIfNoEmailFound).
+  - New `organizationIDMappings` request field and `externalID` response field on people search.
+- date: '2026-05-11'
+  type: change
+  breaking: false
+  endpoints: [POST /v2/people/search, POST /v2/companies/search]
+  highlights:
+  - Accepted values updated for departments, industries, technologies, countries and regions filters.
+- date: '2026-05-04'
+  type: deprecation
+  breaking: false
+  endpoints: [POST /v2/people/search, POST /v2/companies/search]
+  highlights:
+  - '`countries` company filter deprecated in favour of `localities`; provider states existing integrations continue to work.'
+  - 13 new company filters added (naicsCodes, names, industriesExcluded, technologies, technologyCategories, departmentSizes, keywords, yearFounded, localities and their excluded variants).
+- date: '2026-04-29'
+  type: addition
+  breaking: false
+  endpoints: [POST /v2/recommendations/icp, GET /v2/recommendations/icp, POST /v2/people/search]
+  highlights:
+  - 5 new ICP people filters and 13 new ICP company filters.
+  - 4 new people search filters (states, exactJobTitles, previousCompanyDomains, jobChangePeriodInDays).
+- date: '2026-04-21'
+  type: addition
+  breaking: false
+  highlights:
+  - New batch-completion webhook fired when all enrichments in a batch finish.
+  - Recommendations `reason.data` is now a typed object (changesAmount, currentJobTitle, previousJobTitle) instead of a generic map.
+- date: '2026-04-07'
+  type: addition
+  breaking: false
+  endpoints: [POST /v2/recommendations/icp, GET /v2/recommendations/icp, POST /v2/recommendations/fetch]
+  highlights:
+  - Recommendations product introduced — create/update an ICP, retrieve saved ICP filters, fetch daily-refreshed recommendations.
+- date: '2026-03-19'
+  type: addition
+  breaking: false
+  endpoints: [POST /v2/companies/search]
+  highlights:
+  - '`countries` filter accepts world region codes (W-EMEA, W-EU, W-ME, W-AF, W-APAC, W-OC, W-AMER, W-NA, W-LATAM) alongside ISO 3166 alpha-2.'
+- date: '2026-03-12'
+  type: addition
+  breaking: false
+  endpoints: [POST /v2/people/find-by-email]
+  highlights:
+  - New reverse email enrichment endpoint; consumes search credits.
+- date: '2025-10-06'
+  type: change
+  breaking: false
+  endpoints: ['GET /v2/companies/enrich/{id}']
+  highlights:
+  - Unused fields removed; `industries` added.
+related_changelogs:
+- name: Surfer CLI
+  url: https://github.com/Surfe/surfer/blob/main/CHANGELOG.md
+  note: Separate Keep-a-Changelog file for the CLI, tracked in packages/ and cli/.

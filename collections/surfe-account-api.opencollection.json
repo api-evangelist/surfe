@@ -1,0 +1,35 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Surfe Account API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get credit balance",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.surfe.com/v2/credits"
+          },
+          "docs": "Return the remaining credit balance across the email, mobile, and search/ICP credit pools."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

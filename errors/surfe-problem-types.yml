@@ -1,0 +1,104 @@
+generated: '2026-08-13'
+method: searched
+source: https://developers.surfe.com/api-responses
+description: >-
+  Surfe publishes a single, flat error contract for the whole API. Every error
+  response is a JSON object with exactly two fields — `code` (a mirror of the
+  HTTP status, as a number) and `message` (a human-readable explanation). There
+  is no error-type URI, no machine-readable error slug, and no field-level
+  validation detail, so an agent cannot branch on anything finer than the HTTP
+  status.
+format: custom
+problem_media_type: application/json
+rfc9457: false
+rfc9457_note: >-
+  Not RFC 9457. No application/problem+json, no `type`, `title`, `detail` or
+  `instance` members. The envelope is {"code": <int>, "message": <string>}.
+envelope:
+  fields:
+  - {name: code, type: integer, description: Same value as the HTTP status code.}
+  - {name: message, type: string, description: Explanation of what went wrong.}
+  example: '{"code": 400, "message": "Invalid request"}'
+success_codes:
+- {status: 200, name: OK, description: The request succeeded and a result is returned.}
+- {status: 202, name: Accepted, description: 'The request was received and an asynchronous process started; the response carries the information needed to fetch the result.'}
+- {status: 204, name: No Content, description: The request succeeded but there is no content to return.}
+problems:
+- status: 400
+  name: Bad Request
+  title: The request is invalid or malformed
+  remediation: >-
+    Check the request shape before retrying. Surfe's own CLI notes that a wrong
+    body shape can surface as a 500 rather than a 400 — in particular
+    POST /v2/companies/search requires filters nested under a top-level
+    `filters` object, while POST /v2/people/search takes top-level `people` and
+    `companies` objects with NO `filters` wrapper.
+  retryable: false
+  source: https://developers.surfe.com/api-responses
+- status: 401
+  name: Unauthorized
+  title: The API Key is missing or invalid
+  remediation: >-
+    Send `Authorization: Bearer <api-key>`. Keys are issued at
+    https://app.surfe.com/api-settings, one per user. Observed live: every
+    anonymous request to any path on api.surfe.com returns
+    {"code":401,"message":"Missing or wrong API key"}.
+  retryable: false
+  source: https://developers.surfe.com/api-responses
+- status: 403
+  name: Forbidden
+  title: Quota exceeded or insufficient credits
+  description: >-
+    The request cannot be handled because it would either exceed the quota or
+    there are not enough credits available.
+  remediation: >-
+    Check the balance with GET /v2/credits before spending. Daily quotas reset
+    at midnight in the user's local time; credits are purchased separately.
+  retryable: false
+  retry_after_reset: daily
+  source: https://developers.surfe.com/api-responses
+- status: 404
+  name: Not Found
+  title: The requested record cannot be found
+  remediation: >-
+    For enrichment jobs, confirm the enrichmentID returned by the start call.
+  retryable: false
+  source: https://developers.surfe.com/api-responses
+- status: 429
+  name: Too Many Requests
+  title: Rate limit exceeded
+  body: '{"code": 429, "message": "Rate limit exceeded"}'
+  remediation: >-
+    Back off and retry. The documented ceiling is 10 requests/second per user
+    with bursts to 20; the limiter resets every minute.
+  retryable: true
+  source: https://developers.surfe.com/rate-limits
+- status: 500
+  name: Internal Server Error
+  title: There was an unrecoverable error on the server
+  remediation: >-
+    Retry with backoff. Note Surfe's own CLI documents that a malformed v2
+    request body can return 500 instead of 400, so validate the request shape
+    before assuming a server fault.
+  retryable: true
+  source: https://developers.surfe.com/api-responses
+inconsistencies:
+- id: credits-exhausted-status
+  description: >-
+    Surfe documents credit/quota exhaustion in two different places with two
+    different status codes. https://developers.surfe.com/api-responses assigns
+    it 403 Forbidden. The API changelog assigns it 402 Payment Required — the
+    2026-06-04 entry says POST /v2/companies/search "returns 402 when credits
+    are insufficient" and the 2026-06-08 entry says POST /v2/people/search "now
+    returns 402 when the account does not have enough search credits". Both are
+    recorded here because both are published; a client should treat 402 AND 403
+    as insufficient-credit outcomes.
+  sources:
+  - https://developers.surfe.com/api-responses
+  - https://developers.surfe.com/changelog
+  observed: '2026-08-13'
+- id: no-error-taxonomy
+  description: >-
+    There is no error code registry beyond the HTTP statuses. `code` duplicates
+    the status rather than carrying a distinct machine-readable identifier, so
+    two different 400s are indistinguishable except by prose in `message`.

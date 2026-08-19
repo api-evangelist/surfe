@@ -4,8 +4,12 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Surfe
 providerId: surfe
 created: '2026-07-01'
-modified: '2026-07-01'
-reconciled: false
+modified: '2026-08-13'
+generated: '2026-08-13'
+method: searched
+source: https://www.surfe.com/pricing/
+plan_count: 4
+reconciled: true
 tags:
 - B2B Data
 - Contact Data
@@ -21,10 +25,19 @@ description: >-
   monthly. Credit consumption applies to API usage the same way it applies to
   the LinkedIn and CRM experiences.
 notes: >-
-  Prices and credit allotments below reflect the published Surfe pricing page and
-  are subject to change; verify current per-seat prices, credit counts, and API
-  plan availability during reconciliation. API access, webhooks, and n8n
-  integration are referenced on higher tiers.
+  Re-read against https://www.surfe.com/pricing/ on 2026-08-13. Three tiers are
+  published with a price — Free $0, Essential $39/user/month, Pro $79/user/month
+  (Most popular) — each with yearly billing advertised at up to 25% off monthly.
+  Credit allotments are stated PER YEAR on the page while the feature copy says
+  "Credits refill every month"; both statements are Surfe's own and are recorded
+  as published. The Enterprise entry below is NOT a priced tier on the pricing
+  page: the page offers only "Talk to sales" / "Book a demo", so it is recorded
+  as a contact-sales arrangement rather than a published plan. API access is not
+  broken out as its own priced tier — API usage draws on the same credit pools
+  as the LinkedIn and CRM experiences, and search credits (which raise the API
+  search quotas from 200 to as much as 100,000 results/day) are enabled by
+  request through api.support@surfe.com rather than purchased on the pricing
+  page.
 sources:
 - https://www.surfe.com/pricing/
 - https://developers.surfe.com/
@@ -61,7 +74,7 @@ plans:
     name: search_results
     type: request
     metric: results
-    limit: 1000
+    limit: 100
     timeFrame: week
     geo: global
     unit: 1
@@ -69,7 +82,7 @@ plans:
     userMultiplied: false
   elements:
   - name: Email Validation (unlimited)
-  - name: CRM Add (limited)
+  - name: CRM Add (limited to 1 contact per day)
 - id: surfe-essential
   name: Essential
   type: paid
@@ -107,7 +120,18 @@ plans:
     unit: 1
     price: included
     userMultiplied: true
+  - label: Search Results
+    name: search_results
+    type: request
+    metric: results
+    limit: 1000
+    timeFrame: week
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: false
   elements:
+  - name: 14-day free trial
   - name: CRM and Google Sheets Integration
   - name: List Sync
   - name: Email Validation (unlimited)

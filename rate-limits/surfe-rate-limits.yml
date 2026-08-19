@@ -4,8 +4,11 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Surfe
 providerId: surfe
 created: '2026-07-01'
-modified: '2026-07-01'
-reconciled: false
+modified: '2026-08-13'
+generated: '2026-08-13'
+method: searched
+source: https://developers.surfe.com/rate-limits
+reconciled: true
 tags:
 - B2B Data
 - Contact Data
@@ -14,58 +17,142 @@ tags:
 - Quotas
 - Throttling
 description: >-
-  The Surfe API enforces a per-account request rate limit of up to 10 requests
-  per second, allowing short bursts of up to 20 requests, plus a daily request
-  quota (documented at 2,000 requests/day) that resets at midnight in the user's
-  timezone. Separate from request throttling, enrichment and search consume
-  credits from distinct email, mobile, and search/ICP pools; exhausting a credit
-  pool returns HTTP 402 rather than a throttling response.
+  Surfe enforces two independent ceilings. A request-rate limiter caps every
+  account at 10 requests per second with short bursts to 20, resetting every
+  minute and returning HTTP 429. Separately, per-endpoint DAILY QUOTAS cap how
+  much data an account can pull — 2,000 profiles/day for enrichment and 200
+  results/day for search on the free allowance, rising to as much as 100,000/day
+  once search credits are enabled — and those reset at midnight in the account's
+  local time. Credits are a third, orthogonal meter: email, mobile and search
+  pools are consumed per unit of work and exhausting one ends the request
+  regardless of how much rate budget remains.
 notes: >-
-  Values reflect the published Surfe API documentation and are subject to change;
-  verify current per-second, burst, and daily request limits during
-  reconciliation. Large bulk enrichment jobs (up to 10,000 people per request)
-  are processed asynchronously and should be consumed via webhook or polling
-  rather than tight retry loops.
+  Surfe publishes NO rate-limit response headers. There is no RateLimit-*, no
+  X-RateLimit-*, and no Retry-After documented anywhere in the reference, so a
+  client cannot read remaining budget or a reset hint from a response — it can
+  only observe the 429 and back off blind. This is the largest runtime-semantics
+  gap in the Surfe contract. Search credits are opt-in and must be enabled by
+  contacting api.support@surfe.com; without them the search quotas stay at the
+  low free tier.
 sources:
-- https://developers.surfe.com/
-- https://intercom.help/surfe/en/articles/14324073-api-getting-started-with-the-surfe-api
+- https://developers.surfe.com/rate-limits
+- https://developers.surfe.com/credits-and-quotas
+- https://developers.surfe.com/api-responses
+- https://developers.surfe.com/changelog
 responseCodes:
   throttled: 429
-  insufficientCredits: 402
+  throttledBody: '{"code": 429, "message": "Rate limit exceeded"}'
+  quotaOrCreditsExhausted: 403
+  quotaOrCreditsExhaustedAlternate: 402
+  quotaNote: >-
+    https://developers.surfe.com/api-responses defines 403 Forbidden as "the
+    request cannot be handled because it would either exceed the quota or there
+    is not enough credits available". The changelog separately documents 402 for
+    insufficient search credits on POST /v2/people/search (2026-06-08) and POST
+    /v2/companies/search (2026-06-04). Both are published; clients should handle
+    both.
+headers:
+  published: []
+  retryAfter: false
+  note: No rate-limit or retry headers are documented on any Surfe response.
 limits:
 - name: Requests Per Second
   scope: account
   metric: requests
   limit: 10
-  notes: Sustained rate limit across the account's API key.
+  timeFrame: second
+  notes: Documented maximum sustained rate per user across the account's API key.
 - name: Burst
   scope: account
   metric: requests
   limit: 20
-  notes: Short bursts up to 20 requests are tolerated above the 10 rps sustained rate.
-- name: Requests Per Day
+  timeFrame: burst
+  notes: >-
+    "A burst of up to 20 requests within a short period will be allowed."
+    The limiter is documented as resetting every minute.
+- name: People Enrichment Quota
   scope: account
-  metric: requests
+  metric: profiles
   limit: 2000
-  notes: Daily request quota; resets at midnight in the user's timezone. Verify on reconciliation.
+  timeFrame: day
+  endpoint: POST /v2/people/enrich
+  notes: Free allowance. Resets at midnight in the user's local time. No search-credit uplift is published for this quota.
+- name: People Search Quota
+  scope: account
+  metric: results
+  limit: 200
+  timeFrame: day
+  endpoint: POST /v2/people/search
+  withSearchCredits: 100000
+  notes: 200 results/day on the free allowance, up to 100,000 results/day with search credits enabled.
+- name: Company Enrichment Quota
+  scope: account
+  metric: profiles
+  limit: 2000
+  timeFrame: day
+  endpoint: POST /v2/companies/enrich
+  withSearchCredits: 100000
+  notes: 2,000 profiles/day free, up to 100,000/day with search credits.
+- name: Company Search Quota
+  scope: account
+  metric: results
+  limit: 200
+  timeFrame: day
+  endpoint: POST /v2/companies/search
+  withSearchCredits: 100000
+  notes: 200 results/day free, up to 100,000 results/day with search credits.
 - name: Bulk Enrichment Batch Size
   scope: request
   metric: records
   limit: 10000
-  notes: Maximum people per POST /people/enrich request; processed asynchronously.
+  endpoint: POST /v2/people/enrich
+  notes: Maximum people per request; processed asynchronously via the enrichmentID job pattern.
+- name: Search Page Size
+  scope: request
+  metric: results
+  limit: 200
+  endpoint: [POST /v2/people/search, POST /v2/companies/search, POST /v2/recommendations/fetch]
+  notes: Documented maximum for the `limit` field; page onward with nextPageToken.
+- name: People Per Company
+  scope: request
+  metric: results
+  limit: 40
+  endpoint: POST /v2/people/search
+  notes: >-
+    `peoplePerOrganization` maximum raised from 5 to 40 on 2026-06-30 per the
+    changelog.
+- name: Country Filter Values
+  scope: request
+  metric: values
+  limit: 250
+  endpoint: [POST /v2/people/search, POST /v2/companies/search]
+  notes: Raised from 100 to 250 on 2026-06-19.
 policies:
 - name: Credit Pools
   description: >-
-    Email, mobile, and search/ICP credits are metered in separate pools;
-    running out returns HTTP 402 independent of request throttling.
+    Email finder, mobile finder and search credits are metered in three separate
+    pools. Exhausting one ends the request independently of rate limiting.
+    Balance is readable at GET /v2/credits.
+- name: Search Credit Formula
+  description: >-
+    Search consumption changed on 2026-06-09 from ceil(results / 25) to
+    ceil(results / 10) — a 2.5x increase per call. Any cost model built before
+    that date is wrong.
 - name: Backoff Strategy
   description: >-
-    Clients should implement exponential backoff with jitter on 429 responses
-    and honor any Retry-After header.
+    Because no Retry-After or RateLimit-* header is returned, clients must use a
+    fixed exponential backoff with jitter on 429 rather than reading a hint from
+    the response.
 - name: Async Consumption
   description: >-
     Prefer webhooks (notificationOptions.webhookUrl) over polling for bulk
-    enrichment jobs to avoid burning request quota on status checks.
+    enrichment jobs — every poll consumes the same daily quota as the work
+    itself.
+- name: No Idempotency
+  description: >-
+    No idempotency key is documented, so a retried enrichment or search can be
+    charged twice. Deduplicate inputs and persist the enrichmentID from the 202
+    before retrying anything.
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

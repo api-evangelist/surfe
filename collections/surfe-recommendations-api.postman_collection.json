@@ -1,0 +1,451 @@
+{
+  "item": [
+    {
+      "id": "3803a80d-97d8-44b5-81ea-06fb5b50b49d",
+      "name": "Recommendations",
+      "description": {
+        "content": "ICP definition and lookalike account recommendations.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "15c926b1-c3c5-44d9-9a35-020ceb23536c",
+          "name": "Create or update ICP",
+          "request": {
+            "name": "Create or update ICP",
+            "description": {
+              "content": "Create or update the Ideal Customer Profile used to generate lookalike account recommendations.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "recommendations",
+                "icp"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"filters\": {\n    \"industries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"employeeCount\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"revenue\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"domains\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"keywords\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f594c62b-8b6e-4a04-a8fd-c66e9b9c44e3",
+              "name": "ICP saved.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations",
+                    "icp"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"filters\": {\n    \"industries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"employeeCount\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"revenue\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"domains\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"keywords\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"<string>\",\n  \"filters\": {\n    \"industries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"employeeCount\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"revenue\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"domains\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"keywords\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4f82604d-abd3-40ca-af8d-1ea867514bee",
+              "name": "Missing or invalid API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations",
+                    "icp"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"filters\": {\n    \"industries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"employeeCount\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"revenue\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"domains\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"keywords\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "23e7cb40-6b2d-4a9c-aecf-f96af972636b",
+              "name": "Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations",
+                    "icp"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"filters\": {\n    \"industries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"employeeCount\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"revenue\": {\n      \"from\": \"<integer>\",\n      \"to\": \"<integer>\"\n    },\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"domains\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"keywords\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cb55a64e-254b-4f35-8ab0-a06fd1aaf1c5",
+          "name": "Fetch lookalike recommendations",
+          "request": {
+            "name": "Fetch lookalike recommendations",
+            "description": {
+              "content": "Fetch lookalike account recommendations resembling the best-fit companies defined by the ICP.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "recommendations",
+                "fetch"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"limit\": \"<integer>\",\n  \"pageToken\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "dd112b60-7d13-42d2-a20c-b284b73097f9",
+              "name": "Lookalike company recommendations.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations",
+                    "fetch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"limit\": \"<integer>\",\n  \"pageToken\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"companies\": [\n    {\n      \"name\": \"string\",\n      \"domain\": \"string\",\n      \"websites\": [\n        \"string\",\n        \"string\"\n      ],\n      \"description\": \"string\",\n      \"industry\": \"string\",\n      \"keywords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"employeeCount\": 2720,\n      \"revenue\": \"string\",\n      \"founded\": 4796,\n      \"hqCountry\": \"string\",\n      \"hqAddress\": \"string\",\n      \"linkedInUrl\": \"string\",\n      \"linkedInFollowersCount\": 3278,\n      \"phones\": [\n        \"string\",\n        \"string\"\n      ],\n      \"isPublic\": false,\n      \"stockExchange\": \"string\",\n      \"stockSymbol\": \"string\",\n      \"fundingRounds\": [\n        {\n          \"type\": \"string\",\n          \"amount\": 1381.9161350187082,\n          \"date\": \"string\"\n        },\n        {\n          \"type\": \"string\",\n          \"amount\": 7300.878875370193,\n          \"date\": \"string\"\n        }\n      ],\n      \"parentOrganization\": \"string\",\n      \"externalID\": \"string\",\n      \"status\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"domain\": \"string\",\n      \"websites\": [\n        \"string\",\n        \"string\"\n      ],\n      \"description\": \"string\",\n      \"industry\": \"string\",\n      \"keywords\": [\n        \"string\",\n        \"string\"\n      ],\n      \"employeeCount\": 4916,\n      \"revenue\": \"string\",\n      \"founded\": 4961,\n      \"hqCountry\": \"string\",\n      \"hqAddress\": \"string\",\n      \"linkedInUrl\": \"string\",\n      \"linkedInFollowersCount\": 4517,\n      \"phones\": [\n        \"string\",\n        \"string\"\n      ],\n      \"isPublic\": true,\n      \"stockExchange\": \"string\",\n      \"stockSymbol\": \"string\",\n      \"fundingRounds\": [\n        {\n          \"type\": \"string\",\n          \"amount\": 8296.870881436213,\n          \"date\": \"string\"\n        },\n        {\n          \"type\": \"string\",\n          \"amount\": 582.7310443023548,\n          \"date\": \"string\"\n        }\n      ],\n      \"parentOrganization\": \"string\",\n      \"externalID\": \"string\",\n      \"status\": \"string\"\n    }\n  ],\n  \"nextPageToken\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2729a106-b72e-4fe6-897b-459ee9009fa9",
+              "name": "Missing or invalid API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations",
+                    "fetch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"limit\": \"<integer>\",\n  \"pageToken\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f9e92e9f-42b4-4386-9f62-333898193c7c",
+              "name": "Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "recommendations",
+                    "fetch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"limit\": \"<integer>\",\n  \"pageToken\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.surfe.com/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "2f3056dc-1980-43e9-be37-ab5d278c9934",
+    "name": "Surfe Account Recommendations API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Surfe API (formerly Leadjet) provides B2B people and company search plus enrichment. It returns verified professional emails and mobile phone numbers, company firmographics, and lookalike account recommendations. Bulk enrichment is asynchronous: start a job with POST and either poll the GET job endpoint or receive a webhook callback. All requests are authenticated with a Bearer API key managed from the Surfe dashboard.\n\nContact Support:\n Name: Surfe API Support",
+      "type": "text/plain"
+    }
+  }
+}

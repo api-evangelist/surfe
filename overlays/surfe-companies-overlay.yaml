@@ -1,0 +1,71 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Surfe Account Companies API
+  version: 1.0.0
+extends: openapi/surfe-companies-api-openapi.yml
+x-generated: '2026-08-13'
+x-method: generated
+x-source: openapi/surfe-companies-api-openapi.yml + https://developers.surfe.com/
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://github.com/api-evangelist/surfe
+    x-apievangelist-generated: '2026-08-13'
+    x-api-conventions: conventions/surfe-conventions.yml
+    x-error-catalog: errors/surfe-problem-types.yml
+    x-rate-limits: rate-limits/surfe-rate-limits.yml
+    x-lifecycle: lifecycle/surfe-lifecycle.yml
+    x-authentication: authentication/surfe-authentication.yml
+    x-data-model: data-model/surfe-data-model.yml
+    x-spec-provenance: 'Surfe publishes no machine-readable OpenAPI document. Probed 2026-08-13: api.surfe.com/{openapi.json,openapi.yaml,swagger.json,api-docs,docs,redoc}
+      all 401 (blanket auth gate); developers.surfe.com/{openapi.json,openapi.yaml,swagger.json} all 404
+      HTML. This spec is an API Evangelist rendering of the published endpoint reference at https://developers.surfe.com
+      and is not a Surfe artifact.'
+- target: $.info
+  update:
+    x-agent-surfaces:
+      mcp:
+        url: https://mcp.eu.surfe.com/mcp
+        mode: remote
+        auth: oauth2 authorization_code + PKCE S256
+        status: beta
+        docs: https://developers.surfe.com/mcp
+        manifest: mcp/surfe-mcp.yml
+      cli:
+        name: surfer
+        version: v0.1.2
+        install: brew install surfe/tap/surfer-cli
+        agent_prompt: surfer ai
+        manifest: cli/surfe-cli.yml
+      webhooks:
+        events:
+        - person.enrichment.completed
+        - person.batch-enrichment.completed
+        - company.enrichment.completed
+        signed: false
+        manifest: asyncapi/surfe-webhooks.yml
+      agent_card: null
+- target: $.info
+  update:
+    x-runtime-semantics:
+      idempotency:
+        supported: false
+        note: No idempotency key is documented. Calls debit metered credits, so a blind retry can double-charge.
+      rate_limit_headers:
+        published: []
+        note: No RateLimit-*, X-RateLimit-* or Retry-After header is documented; 429 carries only {"code","message"}.
+      pagination:
+        style: opaque-cursor
+        request:
+        - pageToken
+        - limit
+        response:
+        - nextPageToken
+      credit_exhaustion_status:
+      - 403
+      - 402
+      credit_exhaustion_note: https://developers.surfe.com/api-responses assigns 403; the changelog assigns
+        402. Both are published by Surfe.
+      malformed_body_status: 500
+      malformed_body_note: Surfe's own CLI repository (AGENTS.md) states a wrong v2 request shape returns
+        HTTP 500, not 400.

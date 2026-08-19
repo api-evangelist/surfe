@@ -1,14 +1,89 @@
-generated: '2026-07-11'
-method: derived
+generated: '2026-08-13'
+method: searched
 source: openapi/surfe-openapi.yml
+docs: https://developers.surfe.com/api-key
+description: >-
+  Surfe runs two authentication surfaces off ONE credential. The REST API takes
+  the Surfe API key directly as an HTTP bearer token. The hosted MCP server and
+  the official `surfer` CLI wrap that same key in OAuth 2.0 authorization code
+  + PKCE: you paste the key once at Surfe's sign-in page and the client holds a
+  managed token instead of the raw key. API keys are per-user and each user may
+  hold exactly one at a time.
 summary:
-  types:
-  - http
+  types: [http, oauth2]
+  api_key_in: [header]
+  oauth2_flows: [authorizationCode]
+  pkce: [S256]
 schemes:
 - name: bearerAuth
   type: http
   scheme: bearer
-  description: 'Surfe API key issued from the Surfe dashboard, sent as `Authorization: Bearer
-    {api-key}`.'
+  surface: rest
+  description: >-
+    Surfe API key issued from the Surfe dashboard, sent as
+    `Authorization: Bearer {api-key}`. Required on every request to every
+    endpoint — the API host answers unauthenticated requests to any path with
+    401 {"code":401,"message":"Missing or wrong API key"}.
+  key_management: https://app.surfe.com/api-settings
+  keys_per_user: 1
+  rotation: >-
+    Surfe's guidance is to delete a suspected-compromised key immediately and
+    create a new one from the dashboard. No programmatic rotation endpoint is
+    documented.
   sources:
   - openapi/surfe-openapi.yml
+  - https://developers.surfe.com/api-key
+- name: surfeMcpOAuth
+  type: oauth2
+  surface: mcp
+  description: >-
+    OAuth 2.0 for the hosted MCP server at https://mcp.eu.surfe.com/mcp.
+    Advertised via RFC 8414 authorization server metadata and RFC 9728 protected
+    resource metadata; the client exchanges the user's Surfe API key at Surfe's
+    sign-in page for a managed token.
+  flows:
+  - flow: authorizationCode
+    issuer: https://mcp.eu.surfe.com/
+    authorizationUrl: https://mcp.eu.surfe.com/authorize
+    tokenUrl: https://mcp.eu.surfe.com/token
+    registrationUrl: https://mcp.eu.surfe.com/register
+    revocationUrl: https://mcp.eu.surfe.com/revoke
+    scopes:
+      surfe: Access to the Surfe MCP tool surface (the only scope advertised).
+    code_challenge_methods: [S256]
+    grant_types: [authorization_code, refresh_token]
+    token_endpoint_auth_methods: [client_secret_post, client_secret_basic]
+    bearer_methods: [header]
+  dynamic_client_registration: true
+  sources:
+  - well-known/surfe-oauth-authorization-server.json
+  - well-known/surfe-oauth-protected-resource.json
+  - https://developers.surfe.com/mcp
+- name: surferCliOAuth
+  type: oauth2
+  surface: cli
+  description: >-
+    `surfer login` opens the browser and runs OAuth 2.0 + PKCE against Surfe's
+    auth host, storing tokens at ~/.surfer/tokens.json with mode 0600. For
+    non-interactive use (CI, agents) the CLI accepts the raw API key in the
+    SURFE_API_KEY environment variable and skips the OAuth flow entirely.
+  flows:
+  - flow: authorizationCode
+    authHost: https://eu.prod.surfe.com
+    code_challenge_methods: [S256]
+  non_interactive_credential: SURFE_API_KEY
+  token_storage: ~/.surfer/tokens.json (0600)
+  sources:
+  - https://github.com/Surfe/surfer
+  - https://raw.githubusercontent.com/surfe/surfer/main/AGENTS.md
+unauthenticated_response:
+  status: 401
+  body: '{"code":401,"message":"Missing or wrong API key"}'
+  observed: '2026-08-13'
+  observed_on: https://api.surfe.com/
+notes: >-
+  No OpenID Connect discovery document is served on any Surfe host
+  (/.well-known/openid-configuration 404s on mcp.eu.surfe.com,
+  developers.surfe.com, www.surfe.com and app.surfe.com; 401 on api.surfe.com).
+  The REST API declares no OAuth scopes — scoping exists only on the MCP
+  surface, where a single `surfe` scope is advertised.

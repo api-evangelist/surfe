@@ -1,0 +1,123 @@
+generated: '2026-08-13'
+method: searched
+source: https://github.com/Surfe/surfer
+description: >-
+  `surfer` is Surfe's official command-line client for the public API, written in
+  Go with Cobra and published under MIT licence from Surfe's own GitHub
+  organisation. It is explicitly built for agents as much as humans — every
+  command emits JSON on stdout, every command accepts `--json` to pass a raw API
+  payload, exit codes are 0/1, and a hidden-in-plain-sight `surfer ai` command
+  prints a ready-made system prompt describing the whole command surface for an
+  LLM to consume.
+name: surfer
+binary: surfer
+formula: surfer-cli
+language: go
+license: MIT
+repository: https://github.com/Surfe/surfer
+module: github.com/Surfe/surfer
+version: v0.1.2
+released: '2026-07-01'
+official: true
+requires: Go 1.26+ (source builds only)
+install:
+- method: homebrew
+  command: brew install surfe/tap/surfer-cli
+  tap: https://github.com/Surfe/homebrew-tap
+  recommended: true
+  note: >-
+    The formula is `surfer-cli` (to avoid a clash with an unrelated `surfer` in
+    homebrew-core) but installs the `surfer` command. Upgrade with
+    `brew upgrade surfer-cli`.
+- method: github-release
+  command: 'curl -sL https://github.com/Surfe/surfer/releases/latest/download/surfer_darwin_arm64.tar.gz | tar xz'
+  platforms: [darwin_amd64, darwin_arm64, linux_amd64, linux_arm64]
+- method: source
+  command: git clone https://github.com/Surfe/surfer.git && cd surfer && make install
+- method: self-update
+  command: surfer update
+authentication:
+  interactive: >-
+    `surfer login` opens the browser for OAuth 2.0 + PKCE against
+    https://eu.prod.surfe.com. Tokens are written to ~/.surfer/tokens.json with
+    mode 0600.
+  non_interactive: >-
+    Set SURFE_API_KEY and the CLI skips OAuth entirely and uses the API key —
+    the documented path for CI, scripts and AI agents.
+  logout: surfer logout
+commands:
+- group: Authentication
+  commands:
+  - {command: surfer login, description: Sign in via browser (OAuth 2.0 + PKCE)}
+  - {command: surfer logout, description: Sign out and clear local tokens}
+  - {command: surfer whoami, description: 'Show the authenticated account (email, orgId, userId, roles) decoded locally from the access token — no API call'}
+- group: People
+  commands:
+  - command: surfer search people
+    description: Search contacts by job title, company, location
+    backs: POST /v2/people/search
+    flags: [--job-titles, --seniorities, --departments, --company-domains, --company-names, --countries, --industries, --limit, --people-per-company, --json, -o/--output]
+  - command: surfer enrich people
+    description: Get verified emails, phones, LinkedIn profiles
+    backs: POST /v2/people/enrich
+    flags: [--linkedin, --first-name, --last-name, --company-name, --company-domain, --include-email, --include-mobile, --json, --wait, --poll-interval, --timeout, -o/--output]
+  - command: surfer enrich people status <enrichment-id>
+    description: Check enrichment progress
+    backs: GET /v2/people/enrich/{id}
+- group: Companies
+  commands:
+  - command: surfer search companies [names...]
+    description: Search companies by name, industry, size
+    backs: POST /v2/companies/search
+    flags: [--domains, --names, --countries, --industries, --min-employees, --max-employees, --limit, --json, -o/--output]
+  - command: surfer enrich companies
+    description: Get firmographic data for a company
+    backs: POST /v2/companies/enrich
+    flags: [--domain, --external-id, --wait, --poll-interval, --timeout, --json]
+  - command: surfer enrich companies status <enrichment-id>
+    description: Check enrichment progress
+    backs: GET /v2/companies/enrich/{id}
+- group: Account
+  commands:
+  - {command: surfer credits, description: Check remaining email and mobile credits, backs: GET /v2/credits}
+  - {command: surfer version, description: Print CLI version}
+  - {command: surfer update, description: Self-update to the latest release}
+  - {command: surfer ai, description: 'Print a system prompt for AI agents describing every command, flag and usage pattern'}
+key_flows:
+- name: Agent-driven prospecting
+  detail: >-
+    `surfer ai` emits a structured system prompt (versioned against the running
+    binary) that an agent can be fed directly; combined with `--json` the agent
+    never has to learn flag syntax. Captured verbatim at
+    skills/surfe-surfer-cli-agent-prompt.md.
+- name: Blocking enrichment
+  detail: >-
+    `--wait` turns the async start/poll job pattern into one synchronous call
+    (default poll interval 2s, default timeout 2m).
+- name: Bulk export
+  detail: '`-o csv` writes CSV, e.g. `surfer search people ... -o csv > leads.csv`.'
+- name: Pipeline composition
+  detail: "JSON on stdout by default, designed for `jq` / `gron`."
+output:
+  default: json
+  formats: [json, csv]
+  exit_codes: {0: success, 1: error}
+  debug: '--debug prints the full HTTP request and response (Surfe warns this may include personal data and bearer tokens)'
+configuration:
+  precedence: [environment variables, '~/.surfer/config.yaml', built-in defaults]
+  file: ~/.surfer/config.yaml
+  env:
+  - {name: SURFE_API_KEY, default: null, description: API key for non-interactive auth (skips OAuth)}
+  - {name: SURFER_AUTH_URL, default: 'https://eu.prod.surfe.com', description: API and auth base URL}
+  - {name: SURFER_CLIENT_ID, default: hubspot, description: OAuth client ID}
+  - {name: SURFER_API_URL, default: 'https://api.surfe.com', description: 'REST API base URL (named in the repo AGENTS.md)'}
+repository_files:
+  agents_md: https://github.com/Surfe/surfer/blob/main/AGENTS.md
+  security_md: https://github.com/Surfe/surfer/blob/main/SECURITY.md
+  changelog: https://github.com/Surfe/surfer/blob/main/CHANGELOG.md
+  contributing: https://github.com/Surfe/surfer/blob/main/CONTRIBUTING.md
+  code_of_conduct: https://github.com/Surfe/surfer/blob/main/CODE_OF_CONDUCT.md
+gaps:
+- No `recommendations` command — the ICP/lookalike product is absent from the CLI as it is from the MCP server.
+- No `find-by-email` (reverse email enrichment) command.
+- Releases are v0.1.x; all three tags (v0.1.0, v0.1.1, v0.1.2) shipped on 2026-07-01 and nothing has been released since.

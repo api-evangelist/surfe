@@ -1,0 +1,116 @@
+generated: '2026-08-13'
+method: searched
+status: published
+source: https://developers.surfe.com/mcp
+description: >-
+  Surfe publishes a hosted, remote MCP server (labelled Beta in its own docs) at
+  https://mcp.eu.surfe.com/mcp. It is a URL an MCP client POSTs to — there is no
+  npx/stdio package to install — and it exposes the same surface as the REST API
+  to Claude Desktop, Cursor, Windsurf and any other MCP-compatible client.
+deployment:
+  mode: remote
+  endpoint: https://mcp.eu.surfe.com/mcp
+  install: null
+  package: null
+  auth: oauth
+  verified: probed
+  note: >-
+    Verified by direct POST on 2026-08-13. An unauthenticated
+    {"jsonrpc":"2.0","id":1,"method":"tools/list"} returns HTTP 401 with
+    WWW-Authenticate: Bearer error="invalid_token",
+    resource_metadata="https://mcp.eu.surfe.com/.well-known/oauth-protected-resource/mcp"
+    — i.e. a live MCP server behind OAuth, not a 404. Server header: uvicorn.
+    Surfe also documents a per-call fallback where the client passes the raw
+    Surfe API key on every request; the recommended path is browser sign-in,
+    which exchanges the API key for a managed OAuth token.
+server:
+  name: surfe
+  transport: http
+  url: https://mcp.eu.surfe.com/mcp
+  region: eu
+  status: beta
+  docs: https://developers.surfe.com/mcp
+  clients_documented: [Claude Desktop, Cursor, Windsurf]
+authorization:
+  scheme: oauth2
+  flows: [authorization_code]
+  pkce: [S256]
+  issuer: https://mcp.eu.surfe.com/
+  authorization_endpoint: https://mcp.eu.surfe.com/authorize
+  token_endpoint: https://mcp.eu.surfe.com/token
+  registration_endpoint: https://mcp.eu.surfe.com/register
+  revocation_endpoint: https://mcp.eu.surfe.com/revoke
+  scopes_supported: [surfe]
+  metadata:
+  - well-known/surfe-oauth-authorization-server.json
+  - well-known/surfe-oauth-protected-resource.json
+  credential: >-
+    The same API key as the REST API, issued at https://app.surfe.com/api-settings.
+    Browser sign-in exchanges it once for a managed token; the client never
+    stores the raw key.
+introspection:
+  tools_list: gated
+  note: >-
+    tools/list and initialize both return 401 invalid_token anonymously, so the
+    live inputSchema for each tool could not be captured. The tool inventory
+    below is taken from Surfe's own MCP documentation ("The server exposes 8
+    tools covering the same surface as the Surfe REST API") and grouped exactly
+    as that page groups them. Tool NAMES are not published by Surfe and are NOT
+    invented here — each entry records the documented capability and the REST
+    operation that backs it. Authenticated introspection is required to capture
+    the wire-level tool names and schemas.
+tool_count_published: 8
+tools:
+- capability: Search people
+  category: People
+  source_operation: openapi/surfe-people-api-openapi.yml#searchPeople
+  rest: POST /v2/people/search
+- capability: Start people enrichment
+  category: People
+  source_operation: openapi/surfe-people-api-openapi.yml#startPeopleEnrichment
+  rest: POST /v2/people/enrich
+- capability: Fetch people enrichment results
+  category: People
+  source_operation: openapi/surfe-people-api-openapi.yml#getPeopleEnrichment
+  rest: GET /v2/people/enrich/{id}
+- capability: Search companies
+  category: Companies
+  source_operation: openapi/surfe-companies-api-openapi.yml#searchCompanies
+  rest: POST /v2/companies/search
+- capability: Start company enrichment
+  category: Companies
+  source_operation: openapi/surfe-companies-api-openapi.yml#startCompanyEnrichment
+  rest: POST /v2/companies/enrich
+- capability: Fetch company enrichment results
+  category: Companies
+  source_operation: openapi/surfe-companies-api-openapi.yml#getCompanyEnrichment
+  rest: GET /v2/companies/enrich/{id}
+- capability: Check remaining email and mobile credits
+  category: Account
+  source_operation: openapi/surfe-account-api-openapi.yml#getCredits
+  rest: GET /v2/credits
+- capability: Eighth tool not individually named in the Surfe MCP documentation
+  category: unknown
+  source_operation: null
+  rest: null
+  note: >-
+    Surfe states the server exposes 8 tools but the page enumerates only 7
+    distinct capabilities across its People / Companies / Account groupings.
+    The eighth is unresolved without authenticated tools/list introspection.
+    Recorded as an honest gap rather than guessed.
+example_prompts:
+- Find VPs of Engineering at fintech companies in Germany and enrich the top 5 with email addresses.
+- 'Pull firmographic data on notion.so: employee count, industry, revenue.'
+- How many Surfe email and mobile credits do I have left this month?
+x-evidence:
+  fetched: '2026-08-13'
+  docs_url: https://developers.surfe.com/mcp
+  docs_status: 200
+  endpoint_probe:
+    url: https://mcp.eu.surfe.com/mcp
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+    http_status: 401
+    www_authenticate: 'Bearer error="invalid_token", error_description="Authentication required"'
+  announced: '2026-05-28'
+  announced_source: https://developers.surfe.com/changelog

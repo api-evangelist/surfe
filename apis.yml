@@ -7,6 +7,18 @@ description: Surfe (formerly Leadjet) is a B2B contact-data and sales-intelligen
   plus enrichment. The Surfe API returns verified business emails and mobile phone numbers,
   company firmographics, and lookalike account recommendations, billed against a credit-based
   model.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve

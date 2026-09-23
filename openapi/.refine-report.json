@@ -1,10 +1,7 @@
 {
   "provider": "surfe",
   "sources": [
-    "surfe-account-api-openapi.yml",
-    "surfe-companies-api-openapi.yml",
-    "surfe-people-api-openapi.yml",
-    "surfe-recommendations-api-openapi.yml"
+    "_original/surfe-openapi.yml"
   ],
   "outputs": [
     "surfe-account-api-openapi.yml",
@@ -15,6 +12,15 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "surfe-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "surfe-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "surfe-companies-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "surfe-people-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "surfe-recommendations-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

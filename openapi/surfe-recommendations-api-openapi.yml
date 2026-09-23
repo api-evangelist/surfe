@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Surfe Account Recommendations API
+  title: Surfe Recommendations API
   version: '2.0'
   description: 'The Surfe API (formerly Leadjet) provides B2B people and company search plus enrichment. It returns verified professional emails and mobile phone numbers, company firmographics, and lookalike account recommendations. Bulk enrichment is asynchronous: start a job with POST and either poll the GET job endpoint or receive a webhook callback. All requests are authenticated with a Bearer API key managed from the Surfe dashboard.'
   contact:
@@ -81,41 +81,7 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
-  responses:
-    RateLimited:
-      description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    ICPDefinition:
-      type: object
-      properties:
-        name:
-          type: string
-        filters:
-          $ref: '#/components/schemas/CompanyFilters'
-    Range:
-      type: object
-      properties:
-        from:
-          type: integer
-        to:
-          type: integer
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
     Company:
       type: object
       properties:
@@ -176,6 +142,20 @@ components:
           type: string
         status:
           type: string
+    ICPDefinition:
+      type: object
+      properties:
+        name:
+          type: string
+        filters:
+          $ref: '#/components/schemas/CompanyFilters'
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
     CompanyFilters:
       type: object
       description: Company-based filters.
@@ -200,6 +180,26 @@ components:
           type: array
           items:
             type: string
+    Range:
+      type: object
+      properties:
+        from:
+          type: integer
+        to:
+          type: integer
+  responses:
+    RateLimited:
+      description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

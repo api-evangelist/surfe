@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Surfe Account Companies API
+  title: Surfe Companies API
   version: '2.0'
   description: 'The Surfe API (formerly Leadjet) provides B2B people and company search plus enrichment. It returns verified professional emails and mobile phone numbers, company firmographics, and lookalike account recommendations. Bulk enrichment is asynchronous: start a job with POST and either poll the GET job endpoint or receive a webhook callback. All requests are authenticated with a Bearer API key managed from the Surfe dashboard.'
   contact:
@@ -98,107 +98,6 @@ paths:
           $ref: '#/components/responses/RateLimited'
 components:
   schemas:
-    JobStatus:
-      type: string
-      enum:
-      - PENDING
-      - IN_PROGRESS
-      - COMPLETED
-      - FAILED
-    EnrichmentJobAccepted:
-      type: object
-      properties:
-        enrichmentID:
-          type: string
-          format: uuid
-        enrichmentCallbackURL:
-          type: string
-          format: uri
-        message:
-          type: string
-          description: Estimated completion time.
-    CompanySearchRequest:
-      type: object
-      required:
-      - filters
-      - limit
-      properties:
-        limit:
-          type: integer
-          minimum: 1
-          maximum: 200
-        filters:
-          $ref: '#/components/schemas/CompanyFilters'
-        pageToken:
-          type: string
-    Range:
-      type: object
-      properties:
-        from:
-          type: integer
-        to:
-          type: integer
-    CompanyEnrichmentRequest:
-      type: object
-      required:
-      - companies
-      properties:
-        companies:
-          type: array
-          minItems: 1
-          description: Companies to enrich, identified by domain and/or externalID.
-          items:
-            type: object
-            properties:
-              domain:
-                type: string
-              externalID:
-                type: string
-        include:
-          type: object
-          properties:
-            firmographics:
-              type: boolean
-            phoneNumbers:
-              type: boolean
-        notificationOptions:
-          type: object
-          properties:
-            webhookUrl:
-              type: string
-              format: uri
-    CompanySearchResponse:
-      type: object
-      properties:
-        companies:
-          type: array
-          items:
-            $ref: '#/components/schemas/Company'
-        total:
-          type: integer
-        nextPageToken:
-          type: string
-    CompanyEnrichmentResult:
-      type: object
-      properties:
-        enrichmentID:
-          type: string
-          format: uuid
-        status:
-          $ref: '#/components/schemas/JobStatus'
-        percentCompleted:
-          type: integer
-        companies:
-          type: array
-          items:
-            $ref: '#/components/schemas/Company'
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
     Company:
       type: object
       properties:
@@ -259,6 +158,20 @@ components:
           type: string
         status:
           type: string
+    JobStatus:
+      type: string
+      enum:
+      - PENDING
+      - IN_PROGRESS
+      - COMPLETED
+      - FAILED
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
     CompanyFilters:
       type: object
       description: Company-based filters.
@@ -283,7 +196,100 @@ components:
           type: array
           items:
             type: string
+    CompanyEnrichmentResult:
+      type: object
+      properties:
+        enrichmentID:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/JobStatus'
+        percentCompleted:
+          type: integer
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+    CompanySearchRequest:
+      type: object
+      required:
+      - filters
+      - limit
+      properties:
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+        filters:
+          $ref: '#/components/schemas/CompanyFilters'
+        pageToken:
+          type: string
+    Range:
+      type: object
+      properties:
+        from:
+          type: integer
+        to:
+          type: integer
+    CompanySearchResponse:
+      type: object
+      properties:
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+        total:
+          type: integer
+        nextPageToken:
+          type: string
+    EnrichmentJobAccepted:
+      type: object
+      properties:
+        enrichmentID:
+          type: string
+          format: uuid
+        enrichmentCallbackURL:
+          type: string
+          format: uri
+        message:
+          type: string
+          description: Estimated completion time.
+    CompanyEnrichmentRequest:
+      type: object
+      required:
+      - companies
+      properties:
+        companies:
+          type: array
+          minItems: 1
+          description: Companies to enrich, identified by domain and/or externalID.
+          items:
+            type: object
+            properties:
+              domain:
+                type: string
+              externalID:
+                type: string
+        include:
+          type: object
+          properties:
+            firmographics:
+              type: boolean
+            phoneNumbers:
+              type: boolean
+        notificationOptions:
+          type: object
+          properties:
+            webhookUrl:
+              type: string
+              format: uri
   responses:
+    InsufficientCredits:
+      description: Not enough credits to complete the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     RateLimited:
       description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
       content:
@@ -298,12 +304,6 @@ components:
             $ref: '#/components/schemas/Error'
     NotFound:
       description: Resource or job not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    InsufficientCredits:
-      description: Not enough credits to complete the request.
       content:
         application/json:
           schema:

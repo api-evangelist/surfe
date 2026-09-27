@@ -34,6 +34,13 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
     CreditBalance:
       type: object
       properties:
@@ -43,13 +50,6 @@ components:
           type: integer
         searchCredits:
           type: integer
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
   responses:
     Unauthorized:
       description: Missing or invalid API key.

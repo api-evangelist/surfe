@@ -81,7 +81,58 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    CompanyFilters:
+      type: object
+      description: Company-based filters.
+      properties:
+        industries:
+          type: array
+          items:
+            type: string
+        employeeCount:
+          $ref: '#/components/schemas/Range'
+        revenue:
+          $ref: '#/components/schemas/Range'
+        countries:
+          type: array
+          items:
+            type: string
+        domains:
+          type: array
+          items:
+            type: string
+        keywords:
+          type: array
+          items:
+            type: string
+    ICPDefinition:
+      type: object
+      properties:
+        name:
+          type: string
+        filters:
+          $ref: '#/components/schemas/CompanyFilters'
+    Range:
+      type: object
+      properties:
+        from:
+          type: integer
+        to:
+          type: integer
     Company:
       type: object
       properties:
@@ -142,13 +193,6 @@ components:
           type: string
         status:
           type: string
-    ICPDefinition:
-      type: object
-      properties:
-        name:
-          type: string
-        filters:
-          $ref: '#/components/schemas/CompanyFilters'
     Error:
       type: object
       properties:
@@ -156,50 +200,6 @@ components:
           type: string
         code:
           type: string
-    CompanyFilters:
-      type: object
-      description: Company-based filters.
-      properties:
-        industries:
-          type: array
-          items:
-            type: string
-        employeeCount:
-          $ref: '#/components/schemas/Range'
-        revenue:
-          $ref: '#/components/schemas/Range'
-        countries:
-          type: array
-          items:
-            type: string
-        domains:
-          type: array
-          items:
-            type: string
-        keywords:
-          type: array
-          items:
-            type: string
-    Range:
-      type: object
-      properties:
-        from:
-          type: integer
-        to:
-          type: integer
-  responses:
-    RateLimited:
-      description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

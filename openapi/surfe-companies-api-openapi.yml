@@ -98,6 +98,70 @@ paths:
           $ref: '#/components/responses/RateLimited'
 components:
   schemas:
+    CompanyEnrichmentResult:
+      type: object
+      properties:
+        enrichmentID:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/JobStatus'
+        percentCompleted:
+          type: integer
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+    CompanyFilters:
+      type: object
+      description: Company-based filters.
+      properties:
+        industries:
+          type: array
+          items:
+            type: string
+        employeeCount:
+          $ref: '#/components/schemas/Range'
+        revenue:
+          $ref: '#/components/schemas/Range'
+        countries:
+          type: array
+          items:
+            type: string
+        domains:
+          type: array
+          items:
+            type: string
+        keywords:
+          type: array
+          items:
+            type: string
+    JobStatus:
+      type: string
+      enum:
+      - PENDING
+      - IN_PROGRESS
+      - COMPLETED
+      - FAILED
+    EnrichmentJobAccepted:
+      type: object
+      properties:
+        enrichmentID:
+          type: string
+          format: uuid
+        enrichmentCallbackURL:
+          type: string
+          format: uri
+        message:
+          type: string
+          description: Estimated completion time.
+    Range:
+      type: object
+      properties:
+        from:
+          type: integer
+        to:
+          type: integer
     Company:
       type: object
       properties:
@@ -158,102 +222,6 @@ components:
           type: string
         status:
           type: string
-    JobStatus:
-      type: string
-      enum:
-      - PENDING
-      - IN_PROGRESS
-      - COMPLETED
-      - FAILED
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
-    CompanyFilters:
-      type: object
-      description: Company-based filters.
-      properties:
-        industries:
-          type: array
-          items:
-            type: string
-        employeeCount:
-          $ref: '#/components/schemas/Range'
-        revenue:
-          $ref: '#/components/schemas/Range'
-        countries:
-          type: array
-          items:
-            type: string
-        domains:
-          type: array
-          items:
-            type: string
-        keywords:
-          type: array
-          items:
-            type: string
-    CompanyEnrichmentResult:
-      type: object
-      properties:
-        enrichmentID:
-          type: string
-          format: uuid
-        status:
-          $ref: '#/components/schemas/JobStatus'
-        percentCompleted:
-          type: integer
-        companies:
-          type: array
-          items:
-            $ref: '#/components/schemas/Company'
-    CompanySearchRequest:
-      type: object
-      required:
-      - filters
-      - limit
-      properties:
-        limit:
-          type: integer
-          minimum: 1
-          maximum: 200
-        filters:
-          $ref: '#/components/schemas/CompanyFilters'
-        pageToken:
-          type: string
-    Range:
-      type: object
-      properties:
-        from:
-          type: integer
-        to:
-          type: integer
-    CompanySearchResponse:
-      type: object
-      properties:
-        companies:
-          type: array
-          items:
-            $ref: '#/components/schemas/Company'
-        total:
-          type: integer
-        nextPageToken:
-          type: string
-    EnrichmentJobAccepted:
-      type: object
-      properties:
-        enrichmentID:
-          type: string
-          format: uuid
-        enrichmentCallbackURL:
-          type: string
-          format: uri
-        message:
-          type: string
-          description: Estimated completion time.
     CompanyEnrichmentRequest:
       type: object
       required:
@@ -283,9 +251,41 @@ components:
             webhookUrl:
               type: string
               format: uri
+    CompanySearchResponse:
+      type: object
+      properties:
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+        total:
+          type: integer
+        nextPageToken:
+          type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+    CompanySearchRequest:
+      type: object
+      required:
+      - filters
+      - limit
+      properties:
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 200
+        filters:
+          $ref: '#/components/schemas/CompanyFilters'
+        pageToken:
+          type: string
   responses:
-    InsufficientCredits:
-      description: Not enough credits to complete the request.
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:
@@ -296,8 +296,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
+    InsufficientCredits:
+      description: Not enough credits to complete the request.
       content:
         application/json:
           schema:

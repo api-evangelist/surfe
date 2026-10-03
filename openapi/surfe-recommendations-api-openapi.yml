@@ -81,19 +81,6 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    RateLimited:
-      description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
     CompanyFilters:
       type: object
@@ -119,6 +106,13 @@ components:
           type: array
           items:
             type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
     ICPDefinition:
       type: object
       properties:
@@ -193,13 +187,19 @@ components:
           type: string
         status:
           type: string
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
+  responses:
+    RateLimited:
+      description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

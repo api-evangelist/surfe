@@ -98,20 +98,6 @@ paths:
           $ref: '#/components/responses/RateLimited'
 components:
   schemas:
-    CompanyEnrichmentResult:
-      type: object
-      properties:
-        enrichmentID:
-          type: string
-          format: uuid
-        status:
-          $ref: '#/components/schemas/JobStatus'
-        percentCompleted:
-          type: integer
-        companies:
-          type: array
-          items:
-            $ref: '#/components/schemas/Company'
     CompanyFilters:
       type: object
       description: Company-based filters.
@@ -136,25 +122,42 @@ components:
           type: array
           items:
             type: string
-    JobStatus:
-      type: string
-      enum:
-      - PENDING
-      - IN_PROGRESS
-      - COMPLETED
-      - FAILED
-    EnrichmentJobAccepted:
+    Error:
       type: object
       properties:
-        enrichmentID:
-          type: string
-          format: uuid
-        enrichmentCallbackURL:
-          type: string
-          format: uri
         message:
           type: string
-          description: Estimated completion time.
+        code:
+          type: string
+    CompanyEnrichmentRequest:
+      type: object
+      required:
+      - companies
+      properties:
+        companies:
+          type: array
+          minItems: 1
+          description: Companies to enrich, identified by domain and/or externalID.
+          items:
+            type: object
+            properties:
+              domain:
+                type: string
+              externalID:
+                type: string
+        include:
+          type: object
+          properties:
+            firmographics:
+              type: boolean
+            phoneNumbers:
+              type: boolean
+        notificationOptions:
+          type: object
+          properties:
+            webhookUrl:
+              type: string
+              format: uri
     Range:
       type: object
       properties:
@@ -222,35 +225,25 @@ components:
           type: string
         status:
           type: string
-    CompanyEnrichmentRequest:
+    JobStatus:
+      type: string
+      enum:
+      - PENDING
+      - IN_PROGRESS
+      - COMPLETED
+      - FAILED
+    EnrichmentJobAccepted:
       type: object
-      required:
-      - companies
       properties:
-        companies:
-          type: array
-          minItems: 1
-          description: Companies to enrich, identified by domain and/or externalID.
-          items:
-            type: object
-            properties:
-              domain:
-                type: string
-              externalID:
-                type: string
-        include:
-          type: object
-          properties:
-            firmographics:
-              type: boolean
-            phoneNumbers:
-              type: boolean
-        notificationOptions:
-          type: object
-          properties:
-            webhookUrl:
-              type: string
-              format: uri
+        enrichmentID:
+          type: string
+          format: uuid
+        enrichmentCallbackURL:
+          type: string
+          format: uri
+        message:
+          type: string
+          description: Estimated completion time.
     CompanySearchResponse:
       type: object
       properties:
@@ -261,13 +254,6 @@ components:
         total:
           type: integer
         nextPageToken:
-          type: string
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
           type: string
     CompanySearchRequest:
       type: object
@@ -283,27 +269,41 @@ components:
           $ref: '#/components/schemas/CompanyFilters'
         pageToken:
           type: string
+    CompanyEnrichmentResult:
+      type: object
+      properties:
+        enrichmentID:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/JobStatus'
+        percentCompleted:
+          type: integer
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
   responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     RateLimited:
       description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    InsufficientCredits:
-      description: Not enough credits to complete the request.
+    NotFound:
+      description: Resource or job not found.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource or job not found.
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InsufficientCredits:
+      description: Not enough credits to complete the request.
       content:
         application/json:
           schema:

@@ -82,44 +82,6 @@ paths:
           $ref: '#/components/responses/RateLimited'
 components:
   schemas:
-    CompanyFilters:
-      type: object
-      description: Company-based filters.
-      properties:
-        industries:
-          type: array
-          items:
-            type: string
-        employeeCount:
-          $ref: '#/components/schemas/Range'
-        revenue:
-          $ref: '#/components/schemas/Range'
-        countries:
-          type: array
-          items:
-            type: string
-        domains:
-          type: array
-          items:
-            type: string
-        keywords:
-          type: array
-          items:
-            type: string
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
-    ICPDefinition:
-      type: object
-      properties:
-        name:
-          type: string
-        filters:
-          $ref: '#/components/schemas/CompanyFilters'
     Range:
       type: object
       properties:
@@ -127,6 +89,20 @@ components:
           type: integer
         to:
           type: integer
+    ICPDefinition:
+      type: object
+      properties:
+        name:
+          type: string
+        filters:
+          $ref: '#/components/schemas/CompanyFilters'
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
     Company:
       type: object
       properties:
@@ -187,15 +163,39 @@ components:
           type: string
         status:
           type: string
+    CompanyFilters:
+      type: object
+      description: Company-based filters.
+      properties:
+        industries:
+          type: array
+          items:
+            type: string
+        employeeCount:
+          $ref: '#/components/schemas/Range'
+        revenue:
+          $ref: '#/components/schemas/Range'
+        countries:
+          type: array
+          items:
+            type: string
+        domains:
+          type: array
+          items:
+            type: string
+        keywords:
+          type: array
+          items:
+            type: string
   responses:
-    RateLimited:
-      description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
+    RateLimited:
+      description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
       content:
         application/json:
           schema:

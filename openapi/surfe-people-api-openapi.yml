@@ -135,31 +135,55 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
+  responses:
+    RateLimited:
+      description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InsufficientCredits:
+      description: Not enough credits to complete the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource or job not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    EnrichmentJobAccepted:
+    PeopleSearchResponse:
       type: object
       properties:
-        enrichmentID:
+        people:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+        total:
+          type: integer
+        nextPageToken:
           type: string
-          format: uuid
-        enrichmentCallbackURL:
-          type: string
-          format: uri
-        message:
-          type: string
-          description: Estimated completion time.
-    EmailRecord:
+    JobHistoryEntry:
       type: object
       properties:
-        email:
+        companyName:
           type: string
-          format: email
-        type:
+        companyDomain:
           type: string
-          enum:
-          - professional
-          - personal
-        validationStatus:
+        jobTitle:
+          type: string
+        startDate:
+          type: string
+        endDate:
           type: string
     PeopleEnrichmentRequest:
       type: object
@@ -202,110 +226,18 @@ components:
             webhookUrl:
               type: string
               format: uri
-    CompanyFilters:
-      type: object
-      description: Company-based filters.
-      properties:
-        industries:
-          type: array
-          items:
-            type: string
-        employeeCount:
-          $ref: '#/components/schemas/Range'
-        revenue:
-          $ref: '#/components/schemas/Range'
-        countries:
-          type: array
-          items:
-            type: string
-        domains:
-          type: array
-          items:
-            type: string
-        keywords:
-          type: array
-          items:
-            type: string
-    EnrichedPerson:
-      allOf:
-      - $ref: '#/components/schemas/Person'
-      - type: object
-        properties:
-          emails:
-            type: array
-            items:
-              $ref: '#/components/schemas/EmailRecord'
-          mobilePhones:
-            type: array
-            items:
-              $ref: '#/components/schemas/PhoneRecord'
-          jobHistory:
-            type: array
-            items:
-              $ref: '#/components/schemas/JobHistoryEntry'
-          status:
-            type: string
-    PeopleSearchResponse:
-      type: object
-      properties:
-        people:
-          type: array
-          items:
-            $ref: '#/components/schemas/Person'
-        total:
-          type: integer
-        nextPageToken:
-          type: string
-    JobStatus:
-      type: string
-      enum:
-      - PENDING
-      - IN_PROGRESS
-      - COMPLETED
-      - FAILED
-    PeopleEnrichmentResult:
+    EnrichmentJobAccepted:
       type: object
       properties:
         enrichmentID:
           type: string
           format: uuid
-        status:
-          $ref: '#/components/schemas/JobStatus'
-        percentCompleted:
-          type: integer
-        people:
-          type: array
-          items:
-            $ref: '#/components/schemas/EnrichedPerson'
-    PhoneRecord:
-      type: object
-      properties:
-        mobilePhone:
+        enrichmentCallbackURL:
           type: string
-        confidenceScore:
-          type: number
-    PersonInput:
-      type: object
-      properties:
-        linkedinUrl:
+          format: uri
+        message:
           type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        companyName:
-          type: string
-        companyDomain:
-          type: string
-        externalID:
-          type: string
-    Range:
-      type: object
-      properties:
-        from:
-          type: integer
-        to:
-          type: integer
+          description: Estimated completion time.
     Person:
       type: object
       properties:
@@ -333,26 +265,6 @@ components:
           type: string
         externalID:
           type: string
-    JobHistoryEntry:
-      type: object
-      properties:
-        companyName:
-          type: string
-        companyDomain:
-          type: string
-        jobTitle:
-          type: string
-        startDate:
-          type: string
-        endDate:
-          type: string
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: string
     PeopleFilters:
       type: object
       description: Person-based filters.
@@ -374,6 +286,83 @@ components:
           type: array
           items:
             type: string
+    EnrichedPerson:
+      allOf:
+      - $ref: '#/components/schemas/Person'
+      - type: object
+        properties:
+          emails:
+            type: array
+            items:
+              $ref: '#/components/schemas/EmailRecord'
+          mobilePhones:
+            type: array
+            items:
+              $ref: '#/components/schemas/PhoneRecord'
+          jobHistory:
+            type: array
+            items:
+              $ref: '#/components/schemas/JobHistoryEntry'
+          status:
+            type: string
+    CompanyFilters:
+      type: object
+      description: Company-based filters.
+      properties:
+        industries:
+          type: array
+          items:
+            type: string
+        employeeCount:
+          $ref: '#/components/schemas/Range'
+        revenue:
+          $ref: '#/components/schemas/Range'
+        countries:
+          type: array
+          items:
+            type: string
+        domains:
+          type: array
+          items:
+            type: string
+        keywords:
+          type: array
+          items:
+            type: string
+    Range:
+      type: object
+      properties:
+        from:
+          type: integer
+        to:
+          type: integer
+    PeopleEnrichmentResult:
+      type: object
+      properties:
+        enrichmentID:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/JobStatus'
+        percentCompleted:
+          type: integer
+        people:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnrichedPerson'
+    EmailRecord:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        type:
+          type: string
+          enum:
+          - professional
+          - personal
+        validationStatus:
+          type: string
     PeopleSearchRequest:
       type: object
       required:
@@ -396,31 +385,42 @@ components:
         pageToken:
           type: string
           description: Pagination token from a previous response.
-  responses:
-    InsufficientCredits:
-      description: Not enough credits to complete the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource or job not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    RateLimited:
-      description: Too many requests. The API allows up to 10 requests per second with short bursts to 20, plus a daily request quota.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    PhoneRecord:
+      type: object
+      properties:
+        mobilePhone:
+          type: string
+        confidenceScore:
+          type: number
+    JobStatus:
+      type: string
+      enum:
+      - PENDING
+      - IN_PROGRESS
+      - COMPLETED
+      - FAILED
+    PersonInput:
+      type: object
+      properties:
+        linkedinUrl:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        companyName:
+          type: string
+        companyDomain:
+          type: string
+        externalID:
+          type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

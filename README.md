@@ -1,4 +1,4 @@
-# Surfe (surfe)
+# Surfe
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,156 +66,168 @@
 
 Surfe (formerly Leadjet) is a B2B contact-data and sales-intelligence platform that syncs LinkedIn prospects into the CRM and exposes an API for people and company search plus enrichment. The Surfe API returns verified business emails and mobile phone numbers, company firmographics, and lookalike account recommendations, billed against a credit-based model.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/surfe/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/surfe/refs/heads/main/apis.yml)
+**Areas:** B2B Data · Contact Data · Sales Intelligence · Data Enrichment · Lead Generation · CRM · Prospecting
 
-## Tags
+## Surfe on APIs.io
 
-- B2B Data
-- Contact Data
-- Sales Intelligence
-- Enrichment
-- Lead Generation
-- CRM
-- Prospecting
+Everything profiled for Surfe is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/surfe/](https://apis.io/providers/surfe/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (4)
 
-- **Created:** 2026-07-01
-- **Modified:** 2026-07-01
+- [Surfe Account API](https://apis.io/apis/surfe/surfe-account-api/) — Credit balance and account utilities.
+- [Surfe Companies API](https://apis.io/apis/surfe/surfe-companies-api/) — Search and enrich organizations.
+- [Surfe People API](https://apis.io/apis/surfe/surfe-people-api/) — Search and enrich individual contacts.
+- [Surfe Recommendations API](https://apis.io/apis/surfe/surfe-recommendations-api/) — ICP definition and lookalike account recommendations.
 
-## APIs
+### Published properties
 
-### Surfe People Search API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Searches for people by persona and company filters (job titles, seniorities, departments, industries, headcount, location). Job titles are expanded automatically with acronym and semantic matching, and results are paged with a nextPageToken.
+#### AsyncAPI (1)
 
-- **Human URL:** [https://developers.surfe.com/public-009-search-people-v2](https://developers.surfe.com/public-009-search-people-v2)
-- **Base URL:** `https://api.surfe.com/v2`
+Event-driven and webhook contracts.
 
-#### Tags
+- [Surfe Webhooks](https://apis.io/asyncapis/surfe/surfe-webhooks/)
 
-- People Search
-- Prospecting
-- Contacts
+#### MCP servers (1)
 
-#### Properties
+Model Context Protocol servers that expose the API to agents.
 
-- [Documentation](https://developers.surfe.com/public-009-search-people-v2)
-- [API Reference](https://developers.surfe.com/)
-- [OpenAPI](openapi/surfe-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/surfe.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/surfe.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [surfe](https://apis.io/servers/surfe/surfe/)
 
-### Surfe People Enrichment API
+#### Agentic access (1)
 
-Asynchronous bulk enrichment of up to 10,000 people per request by LinkedIn URL or name plus company, returning verified professional emails, mobile phone numbers, LinkedIn URLs, and job history. Start with POST, then poll the GET job endpoint or receive a webhook callback.
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- **Human URL:** [https://developers.surfe.com/public-015-create-people-bulk-enrichment](https://developers.surfe.com/public-015-create-people-bulk-enrichment)
-- **Base URL:** `https://api.surfe.com/v2`
+- [Surfe Agentic Access](https://apis.io/agentic-access/surfe/surfe-agentic-access/)
 
-#### Tags
+#### Collections (5)
 
-- People Enrichment
-- Email
-- Mobile Phone
+Postman and Open Collection request collections.
 
-#### Properties
+- [Surfe API](https://apis.io/collections/surfe/open-surfe/)
+- [Surfe Account API](https://apis.io/collections/surfe/open-surfe-account-api/)
+- [Surfe Account Companies API](https://apis.io/collections/surfe/open-surfe-companies-api/)
+- [Surfe Account People API](https://apis.io/collections/surfe/open-surfe-people-api/)
+- [Surfe Account Recommendations API](https://apis.io/collections/surfe/open-surfe-recommendations-api/)
 
-- [Documentation](https://developers.surfe.com/public-015-create-people-bulk-enrichment)
-- [OpenAPI](openapi/surfe-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/surfe.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/surfe.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Overlays (8)
 
-### Surfe Company Search API
+OpenAPI overlays, including conversational phrasing for each operation.
 
-Searches for companies against Ideal Customer Profile (ICP) filters such as industry, employee count, revenue, location, and keywords, returning matching organizations with domains and firmographic metadata.
+- [Surfe Account Api Phrasing Overlay](https://apis.io/overlays/surfe/surfe-account-api-phrasing-overlay/)
+- [Surfe Account Overlay](https://apis.io/overlays/surfe/surfe-account-overlay/)
+- [Surfe Companies Api Phrasing Overlay](https://apis.io/overlays/surfe/surfe-companies-api-phrasing-overlay/)
+- [Surfe Companies Overlay](https://apis.io/overlays/surfe/surfe-companies-overlay/)
+- [Surfe People Api Phrasing Overlay](https://apis.io/overlays/surfe/surfe-people-api-phrasing-overlay/)
+- [Surfe People Overlay](https://apis.io/overlays/surfe/surfe-people-overlay/)
+- [Surfe Recommendations Api Phrasing Overlay](https://apis.io/overlays/surfe/surfe-recommendations-api-phrasing-overlay/)
+- [Surfe Recommendations Overlay](https://apis.io/overlays/surfe/surfe-recommendations-overlay/)
 
-- **Human URL:** [https://developers.surfe.com/public-011-search-companies](https://developers.surfe.com/public-011-search-companies)
-- **Base URL:** `https://api.surfe.com/v2`
+#### Security (4)
 
-#### Tags
+Authentication, trust centre, and vulnerability disclosure.
 
-- Company Search
-- Firmographics
-- ICP
+- [Surfe Authentication](https://apis.io/security/surfe/surfe-authentication/)
+- [Surfe Domain Security](https://apis.io/security/surfe/surfe-domain-security/)
+- [Surfe Trust Center](https://apis.io/security/surfe/surfe-trust-center/)
+- [Surfe Vulnerability Disclosure](https://apis.io/security/surfe/surfe-vulnerability-disclosure/)
 
-#### Properties
+#### OAuth scopes (1)
 
-- [Documentation](https://developers.surfe.com/public-011-search-companies)
-- [OpenAPI](openapi/surfe-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/surfe.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/surfe.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+The permissions the API asks for.
 
-### Surfe Company Enrichment API
+- [Surfe Scopes](https://apis.io/scopes/surfe/surfe-scopes/)
 
-Asynchronous bulk enrichment of companies by domain, returning firmographics including description, employee count, revenue range, founding year, HQ location, industry, keywords, funding rounds, IPO/stock details, LinkedIn URL and follower count. Start with POST, then poll the GET job endpoint.
+#### Plans and pricing (1)
 
-- **Human URL:** [https://developers.surfe.com/public-014-get-bulk-enrichment-organizations](https://developers.surfe.com/public-014-get-bulk-enrichment-organizations)
-- **Base URL:** `https://api.surfe.com/v2`
+Published plans, tiers and prices.
 
-#### Tags
+- [Surfe Plans Pricing](https://apis.io/plans/surfe/surfe-plans-pricing/)
 
-- Company Enrichment
-- Firmographics
-- Async
+#### Rate limits (1)
 
-#### Properties
+Published request limits.
 
-- [Documentation](https://developers.surfe.com/public-014-get-bulk-enrichment-organizations)
-- [OpenAPI](openapi/surfe-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/surfe.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/surfe.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Surfe Rate Limits](https://apis.io/rate-limits/surfe/surfe-rate-limits/)
 
-### Surfe Recommendations API
+#### FinOps (1)
 
-Defines an Ideal Customer Profile and fetches lookalike account recommendations that resemble the best-fit companies, for account-based prospecting and list expansion.
+What the API costs to run, by operation.
 
-- **Human URL:** [https://developers.surfe.com/](https://developers.surfe.com/)
-- **Base URL:** `https://api.surfe.com/v2`
+- [Surfe Finops](https://apis.io/finops/surfe/surfe-finops/)
 
-#### Tags
+## Where to find this API
 
-- Lookalikes
-- Recommendations
-- ICP
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-#### Properties
-
-- [Documentation](https://developers.surfe.com/)
-- [OpenAPI](openapi/surfe-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/surfe.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/surfe.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Surfe Credits API
-
-Returns the remaining credit balance across the separate email, mobile, and search/ICP credit pools so integrations can check quota before spending on enrichment.
-
-- **Human URL:** [https://developers.surfe.com/](https://developers.surfe.com/)
-- **Base URL:** `https://api.surfe.com/v2`
-
-#### Tags
-
-- Credits
-- Usage
-- Balance
-
-#### Properties
-
-- [Documentation](https://developers.surfe.com/)
-- [OpenAPI](openapi/surfe-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/surfe.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/surfe.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [LinkedIn](https://www.linkedin.com/company/surfe)
 - [Website](https://surfe.com)
 - [Documentation](https://developers.surfe.com/)
-- [Plans](plans/surfe-plans-pricing.yml)
-- [Rate Limits](rate-limits/surfe-rate-limits.yml)
-- [Fin Ops](finops/surfe-finops.yml)
+- [Getting started](https://developers.surfe.com/)
+- [API reference](https://developers.surfe.com/)
+- [Pricing](https://www.surfe.com/pricing/)
+- [Sign up](https://app.surfe.com/sign-up)
+- [Support](https://intercom.help/surfe/en/)
+- [Changelog](https://developers.surfe.com/changelog)
+- [Blog](https://www.surfe.com/blog/feed/)
+- [Security](https://github.com/Surfe/surfer/blob/main/SECURITY.md)
+- [Compliance](https://www.surfe.com/security/)
+- [Terms of service](https://www.surfe.com/terms-and-conditions-api/)
+- [Privacy policy](https://www.surfe.com/privacy-policy/)
+- [GitHub](https://github.com/surfe)
+- [Status](https://status.surfe.com/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 74.1** — exemplar · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 68.3 |
+| Contract quality | 58.9 |
+| Contract governance | 18.2 |
+| Operational transparency | 76.3 |
+| Developer ergonomics | 66.1 |
+| Access clarity | 92.1 |
+
+**Agent readiness 53.7** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 45.1** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/surfe/](https://apis.io/providers/surfe/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Surfe: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/surfe/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
